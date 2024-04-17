@@ -14,18 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -61,7 +49,6 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
 }
 
 model VerificationToken {
@@ -70,4 +57,64 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Encargado {
+    id       String  @id @default(cuid())
+    nombre   String
+    apellido String
+    telefono String?
+    email    String?
+    Kid      Kid[]
+}
+
+model Kid {
+    id             String       @id @default(cuid())
+    nombre         String
+    apellido       String
+    ano_nacimiento DateTime
+    encargado      Encargado    @relation(fields: [encargadoId], references: [id])
+    encargadoId    String
+    pagos          Pagos[]
+    asistencia     Asistencia[]
+}
+
+model Pagos {
+    id                   String   @id @default(cuid())
+    fecha_inicio         DateTime
+    fecha_fin            DateTime
+    cantidad_asistencias Int
+    fecha_pago           DateTime
+    kid                  Kid      @relation(fields: [kidId], references: [id])
+    kidId                String
+}
+
+model Curso {
+    id          String       @id @default(cuid())
+    hora_inicio DateTime
+    hora_fin    DateTime
+    dia_semana  DIAS         @default(LUNES)
+    asistencia  Asistencia[]
+}
+
+model Asistencia {
+    kid        Kid      @relation(fields: [kidId], references: [id])
+    kidId      String
+    curso      Curso    @relation(fields: [cursoId], references: [id])
+    cursoId    String
+    fecha      DateTime
+    asistio    Boolean  @default(false)
+    hora_toma  DateTime @default(now())
+    tomada_por String
+
+    @@id([kidId, cursoId])
+}
+
+enum DIAS {
+    LUNES
+    MARTES
+    MIERCOLES
+    JUEVES
+    VIERNES
+    SABADO
 }
