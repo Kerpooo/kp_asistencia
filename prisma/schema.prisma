@@ -66,6 +66,7 @@ model Encargado {
     telefono String? @unique
     email    String? @unique
     Kid      Kid[]
+    activo   Boolean @default(true)
 }
 
 model Kid {
@@ -77,16 +78,18 @@ model Kid {
     encargadoId    String
     pagos          Pagos[]
     asistencia     Asistencia[]
+    activo         Boolean      @default(true)
 }
 
 model Pagos {
-    id                   String   @id @default(cuid())
-    fecha_inicio         DateTime
-    fecha_fin            DateTime
+    id                   String    @id @default(cuid())
+    fecha_inicio         DateTime?
+    fecha_fin            DateTime?
     cantidad_asistencias Int
     fecha_pago           DateTime
-    kid                  Kid      @relation(fields: [kidId], references: [id])
+    kid                  Kid       @relation(fields: [kidId], references: [id])
     kidId                String
+    pago                 Boolean   @default(false)
 }
 
 model Curso {
@@ -96,6 +99,7 @@ model Curso {
     hora_fin    DateTime
     dia_semana  DIAS         @default(LUNES)
     asistencia  Asistencia[]
+    activo      Boolean
 }
 
 model Asistencia {
