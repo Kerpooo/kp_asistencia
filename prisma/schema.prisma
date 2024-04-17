@@ -63,8 +63,8 @@ model Encargado {
     id       String  @id @default(cuid())
     nombre   String
     apellido String
-    telefono String?
-    email    String?
+    telefono String? @unique
+    email    String? @unique
     Kid      Kid[]
 }
 
@@ -91,6 +91,7 @@ model Pagos {
 
 model Curso {
     id          String       @id @default(cuid())
+    nombre      String       @unique
     hora_inicio DateTime
     hora_fin    DateTime
     dia_semana  DIAS         @default(LUNES)
