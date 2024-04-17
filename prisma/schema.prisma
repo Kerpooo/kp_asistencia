@@ -99,7 +99,7 @@ model Curso {
     hora_fin    DateTime
     dia_semana  DIAS         @default(LUNES)
     asistencia  Asistencia[]
-    activo      Boolean
+    activo      Boolean      @default(true)
 }
 
 model Asistencia {
