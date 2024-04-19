@@ -11,7 +11,7 @@ interface Props {
 export const SignInButton = ({ provider }: Props) => {
     return (
         <Button type="submit" onClick={() => signIn(provider?.google.id, {
-            callbackUrl: `${window.location.origin}`
+            callbackUrl: '/dashboard'
         })} className="w-full">
             <ChromeIcon className="mr-2 h-5 w-5" />
 
