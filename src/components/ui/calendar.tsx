@@ -88,7 +88,7 @@ function Calendar({
                 <SelectTrigger>{format(currentMonth, "MMM")}</SelectTrigger>
                 <SelectContent>
                   {selectItems.map((selectItem) =>
-                    <SelectItem value={selectItem.value}>{selectItem.label}</SelectItem>
+                    <SelectItem key={selectItem.value} value={selectItem.value}>{selectItem.label}</SelectItem>
                   )}
                 </SelectContent>
               </Select>
@@ -125,7 +125,7 @@ function Calendar({
                 <SelectTrigger>{currentMonth.getFullYear()}</SelectTrigger>
                 <SelectContent>
                   {selectItems.map((selectItem) =>
-                    <SelectItem value={selectItem.value}>{selectItem.label}</SelectItem>
+                    <SelectItem key={selectItem.value} value={selectItem.value}>{selectItem.label}</SelectItem>
                   )}
                 </SelectContent>
               </Select>
