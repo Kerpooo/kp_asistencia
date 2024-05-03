@@ -4,7 +4,11 @@ import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 
 interface Props {
-    provider: any
+    provider: {
+        google: {
+            id: string
+        }
+    } | null
 }
 
 
