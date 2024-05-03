@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { FaRegCalendar } from "react-icons/fa6";
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { es } from 'date-fns/locale';
@@ -72,7 +71,6 @@ export const FormFamilia = () => {
         } catch (error) {
             toast({
                 title: "Error al guardar los datos",
-                status: "error",
                 variant: "destructive"
             });
         }
@@ -215,7 +213,6 @@ export const FormFamilia = () => {
                                                         ) : (
                                                             <span>Seleccione una fecha</span>
                                                         )}
-                                                        <FaRegCalendar className="ml-auto h-4 w-4 opacity-50" />
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
