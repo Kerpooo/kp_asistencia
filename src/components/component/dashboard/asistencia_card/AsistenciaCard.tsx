@@ -9,7 +9,7 @@ import { useFechaStore } from "@/store/zustand"
 import { listarCursos } from "@/server/actions/curso"
 import { CalendarAsistencia } from "./CalendarAsistencia"
 
-import { Cursos, SelectCurso } from "./SelectCurso"
+import { type Cursos, SelectCurso } from "./SelectCurso"
 import { useEffect, useState } from "react"
 
 
@@ -22,7 +22,9 @@ export const AsistenciaCard = () => {
             const listaCursos = await listarCursos()
             setCursos(listaCursos)
         }
-        obtenerCursos()
+        obtenerCursos().catch((e) => {
+            return `Error Obteniendo Cursos ${e}`
+        })
     }, []
     )
 

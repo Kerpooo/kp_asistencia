@@ -9,8 +9,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { listarCursos } from "@/server/actions/curso";
-import { Prisma } from "@prisma/client";
+import { type listarCursos } from "@/server/actions/curso";
+import { type Prisma } from "@prisma/client";
 
 const DIAS = [
     'DOMINGO',
@@ -30,6 +30,8 @@ interface SelectCursoProps {
 
 export const SelectCurso = ({ cursos, fecha }: SelectCursoProps) => {
     // Selecciona los cursos que se den ese dia especifico
+
+
     if (cursos) {
         const cursosDia = cursos.filter((curso) => curso.dia_semana === DIAS[fecha.getDay()])
 
@@ -41,7 +43,7 @@ export const SelectCurso = ({ cursos, fecha }: SelectCursoProps) => {
                 <SelectContent>
                     <SelectGroup>
                         {(cursosDia.length > 0) ? <SelectLabel>Cursos</SelectLabel> : <SelectLabel>No hay cursos este dia</SelectLabel>}
-                        {cursosDia && cursosDia.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
+                        {(cursosDia.length > 0) && cursosDia.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
                     </SelectGroup>
                 </SelectContent>
             </Select>
