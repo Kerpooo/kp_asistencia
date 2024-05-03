@@ -63,8 +63,8 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
+        IconLeft: () => <ChevronLeftIcon className="h-4 w-4" />,
+        IconRight: () => <ChevronRightIcon className="h-4 w-4" />,
         Dropdown: (props) => {
 
           const { fromDate, fromMonth, fromYear, toDate, toMonth, toYear } = useDayPicker()
@@ -100,8 +100,8 @@ function Calendar({
 
           if (props.name === "years") {
 
-            const earliestYear = fromYear || fromMonth?.getFullYear() || fromDate?.getFullYear()
-            const latestYear = toYear || toMonth?.getFullYear() || toDate?.getFullYear()
+            const earliestYear = fromYear && fromMonth?.getFullYear() && fromDate?.getFullYear()
+            const latestYear = toYear && toMonth?.getFullYear() && toDate?.getFullYear()
 
             let selectItems: { label: string, value: string }[] = []
 

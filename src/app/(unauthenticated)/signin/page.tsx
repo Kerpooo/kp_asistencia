@@ -1,5 +1,6 @@
 import { SignInButton } from "@/components/component/SignInButton";
 import { getProviders } from "next-auth/react"
+import Image from "next/image";
 
 export default async function SignIn() {
 
@@ -9,7 +10,7 @@ export default async function SignIn() {
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
             <div className="hidden lg:block">
                 {/* TODO: Poner la imagen correspondiente */}
-                <img
+                <Image
                     alt="Image"
                     className="object-cover w-full h-full aspect-none lg:aspect-w-1 lg:aspect-h-1"
                     height="900"

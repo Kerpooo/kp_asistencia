@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 import { navItems } from "./SideNavBar"
+import Image from "next/image"
 
 interface ItemProps {
     url: string
@@ -59,7 +60,7 @@ export const NavBar = () => {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button className="overflow-hidden rounded-full" size="icon" variant="outline">
-                        <img
+                        <Image
                             alt="Avatar"
                             className="overflow-hidden rounded-full"
                             height={36}

@@ -1,7 +1,9 @@
-import React from 'react'
+import Dashboard from "@/components/component/Dashboard";
 
 export default function MenuPage() {
     return (
-        <div>Menu</div>
+        <div>
+            <Dashboard></Dashboard>
+        </div>
     )
 }

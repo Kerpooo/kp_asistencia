@@ -20,7 +20,6 @@ interface CalendarioProps {
 export const CalendarAsistencia = ({ fecha }: CalendarioProps) => {
 
     const { setFechaSeleccionada } = useFechaStore()
-    console.log("render")
 
     const [startDate, setStartDate] = useState<Date>(fecha)
     return (
