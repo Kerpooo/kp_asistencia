@@ -22,25 +22,40 @@ const DIAS = [
     'SABADO'
 ]
 
-type Cursos = Prisma.PromiseReturnType<typeof listarCursos>
+export type Cursos = Prisma.PromiseReturnType<typeof listarCursos>
 interface SelectCursoProps {
-    cursos: Cursos
+    cursos: Cursos | undefined
     fecha: Date
 }
 
 export const SelectCurso = ({ cursos, fecha }: SelectCursoProps) => {
     // Selecciona los cursos que se den ese dia especifico
-    const cursosDia = cursos.filter((curso) => curso.dia_semana === DIAS[fecha.getDay()])
+    if (cursos) {
+        const cursosDia = cursos.filter((curso) => curso.dia_semana === DIAS[fecha.getDay()])
+
+        return (
+            <Select>
+                <SelectTrigger>
+                    {(cursosDia.length > 0) ? <SelectValue placeholder="Cursos" /> : <SelectValue placeholder="..." />}
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        {(cursosDia.length > 0) ? <SelectLabel>Cursos</SelectLabel> : <SelectLabel>No hay cursos este dia</SelectLabel>}
+                        {cursosDia && cursosDia.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        )
+    }
 
     return (
-        <Select>
+        <Select disabled>
             <SelectTrigger>
-                <SelectValue placeholder="Cursos" />
+                <SelectValue placeholder="Cursos..." />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Cursos</SelectLabel>
-                    {cursosDia.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
                 </SelectGroup>
             </SelectContent>
         </Select>

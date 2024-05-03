@@ -8,10 +8,21 @@ import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { useState } from "react"
 
+import { useFechaStore } from "@/store/zustand"
 
-export const CalendarAsistencia = () => {
 
-    const [startDate, setStartDate] = useState<Date>(new Date())
+interface CalendarioProps {
+    fecha: Date
+
+}
+
+
+export const CalendarAsistencia = ({ fecha }: CalendarioProps) => {
+
+    const { setFechaSeleccionada } = useFechaStore()
+    console.log("render")
+
+    const [startDate, setStartDate] = useState<Date>(fecha)
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -27,7 +38,12 @@ export const CalendarAsistencia = () => {
                     captionLayout="dropdown-buttons" fromYear={2020} toDate={new Date()}
                     mode="single"
                     selected={startDate}
-                    onSelect={(date) => date && setStartDate(date)}
+                    onSelect={(date) => {
+                        if (date) {
+                            setStartDate(date)
+                            setFechaSeleccionada(date)
+                        }
+                    }}
                     disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                     }

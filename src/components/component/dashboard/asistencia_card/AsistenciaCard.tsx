@@ -1,42 +1,32 @@
+'use client'
+
 import { Checkbox } from "@/components/ui/checkbox"
 import { CardTitle, CardHeader, CardContent, Card, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
+import { useFechaStore } from "@/store/zustand"
 
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { listarCursos } from "@/server/actions/curso"
 import { CalendarAsistencia } from "./CalendarAsistencia"
 
+import { Cursos, SelectCurso } from "./SelectCurso"
+import { useEffect, useState } from "react"
 
-const SelectCurso = async () => {
-
-    const cursos = await listarCursos()
-
-    return (
-        <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Cursos" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectLabel>Cursos</SelectLabel>
-                    {cursos.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
-                </SelectGroup>
-            </SelectContent>
-        </Select>
-    )
-
-}
 
 export const AsistenciaCard = () => {
+    const { fechaSeleccionada } = useFechaStore()
+    const [cursos, setCursos] = useState<Cursos>()
+
+    useEffect(() => {
+        const obtenerCursos = async () => {
+            const listaCursos = await listarCursos()
+            setCursos(listaCursos)
+        }
+        obtenerCursos()
+    }, []
+    )
+
+
     return (
         <Card>
             <CardHeader className="p-2 sm:p-6 flex flex-col items-center lg:flex-row">
@@ -44,8 +34,8 @@ export const AsistenciaCard = () => {
                     <CardTitle className="mt-4 sm:mt-0 mb-4 lg:mb-0">Asistencia</CardTitle>
                 </div>
                 <div className="gap-2 flex justify-between lg:ml-auto">
-                    <SelectCurso />
-                    <CalendarAsistencia />
+                    <SelectCurso cursos={cursos} fecha={fechaSeleccionada} />
+                    <CalendarAsistencia fecha={fechaSeleccionada} />
                 </div>
             </CardHeader>
             <CardContent>
