@@ -13,7 +13,7 @@ import { type Cursos, SelectCurso } from "./SelectCurso"
 import { useEffect, useState } from "react"
 
 
-export const AsistenciaCard = () => {
+const AsistenciaCard = () => {
     const { fechaSeleccionada } = useFechaStore()
     const [cursos, setCursos] = useState<Cursos>()
 
@@ -75,3 +75,5 @@ export const AsistenciaCard = () => {
     )
 }
 
+
+export default AsistenciaCard

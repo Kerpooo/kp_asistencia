@@ -1,6 +1,6 @@
 
-import { SideNavBar } from "@/components/component/SideNavBar";
-import { NavBar } from "@/components/component/NavBar";
+import { NavBar } from "@/components/navbar/NavBar";
+import { SideNavBar } from "@/components/navbar/SideNavBar";
 import { authOptions } from "@/server/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";

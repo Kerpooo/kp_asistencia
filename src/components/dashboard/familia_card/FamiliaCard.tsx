@@ -1,7 +1,7 @@
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { FormFamilia } from "./FormFamilia";
 
-export const FamiliaCard = () => {
+const FamiliaCard = () => {
     return (
         <Card className="w-full">
             <CardHeader>
@@ -16,3 +16,5 @@ export const FamiliaCard = () => {
 
     )
 }
+
+export default FamiliaCard

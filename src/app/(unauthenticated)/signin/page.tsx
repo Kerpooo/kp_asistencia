@@ -1,4 +1,4 @@
-import { SignInButton } from "@/components/component/SignInButton";
+import { SignInButton } from "@/components/session/SignInButton";
 import { getProviders } from "next-auth/react"
 import Image from "next/image";
 
