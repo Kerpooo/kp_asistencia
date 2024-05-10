@@ -79,6 +79,8 @@ model Kid {
     pagos          Pagos[]
     asistencia     Asistencia[]
     activo         Boolean      @default(true)
+    curso          Curso?       @relation(fields: [cursoId], references: [id])
+    cursoId        String?
 }
 
 model Pagos {
@@ -97,9 +99,10 @@ model Curso {
     nombre      String       @unique
     hora_inicio DateTime
     hora_fin    DateTime
-    dia_semana  DIAS         @default(LUNES)
+    dia_semana  DIAS[]       @default([LUNES])
     asistencia  Asistencia[]
     activo      Boolean      @default(true)
+    Kid         Kid[]
 }
 
 model Asistencia {
@@ -116,6 +119,7 @@ model Asistencia {
 }
 
 enum DIAS {
+    DOMINGO
     LUNES
     MARTES
     MIERCOLES
