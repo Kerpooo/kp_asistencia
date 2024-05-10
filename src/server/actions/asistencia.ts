@@ -1,6 +1,6 @@
 "use server"
 
-import { AsistenciaForm } from "@/components/dashboard/asistencia_card/FormAsistencia"
+import {type AsistenciaForm } from "@/components/dashboard/asistencia_card/FormAsistencia"
 import { prisma } from "@/lib/prisma"
 import { getUserSessionServer } from "./user"
 

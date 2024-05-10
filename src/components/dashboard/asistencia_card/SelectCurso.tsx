@@ -40,7 +40,7 @@ export const SelectCurso = ({ fecha }: SelectCursoProps) => {
         obtenerCursos().catch((e) => {
             return `Error Obteniendo Cursos ${e}`
         })
-    }, [fecha]
+    }, [fecha, diaActual]
     )
     // Selecciona los cursos que se den ese dia especifico
 

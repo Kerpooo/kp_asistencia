@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { type DIAS } from "@prisma/client";
 
-export async function crearCurso(nombre: string, hora_inicio: Date, hora_fin: Date, dia_semana: DIAS) {
+export async function crearCurso(nombre: string, hora_inicio: Date, hora_fin: Date, dia_semana: DIAS[]) {
     try {
         const curso = await prisma.curso.create({
             data: {
@@ -24,7 +24,7 @@ export async function crearCurso(nombre: string, hora_inicio: Date, hora_fin: Da
 }
 
 
-export async function editarCurso(id: string, nombre: string, hora_inicio: Date, hora_fin: Date, dia_semana: DIAS) {
+export async function editarCurso(id: string, nombre: string, hora_inicio: Date, hora_fin: Date, dia_semana: DIAS[]) {
     try {
         const curso = await prisma.curso.update({
             where: {

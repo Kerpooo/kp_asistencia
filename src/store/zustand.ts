@@ -18,13 +18,13 @@ export const useFechaStore = create<FechaStore>((set) => ({
 // TODO: ENVIAR EL CURSO PARA FILTRAR ALUMNOS POR CURSO
 
 type CursoStore = {
-    cursoSeleccionado?: string
-    setCursoSeleccionado: (curso?: string) => void
+    cursoSeleccionado: string
+    setCursoSeleccionado: (curso: string) => void
 }
 
 export const useCursoStore = create<CursoStore>((set) => ({
     cursoSeleccionado: "",
-    setCursoSeleccionado: (curso?: string) => set({ cursoSeleccionado: curso })
+    setCursoSeleccionado: (curso: string) => set({ cursoSeleccionado: curso })
 
 }))
 

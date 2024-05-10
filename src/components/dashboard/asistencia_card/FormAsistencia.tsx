@@ -1,7 +1,7 @@
 'use client'
 
 import { Checkbox } from "@/components/ui/checkbox"
-import { z } from "zod"
+import { type z } from "zod"
 import {
     Form,
     FormControl,
@@ -17,14 +17,14 @@ import { Button } from "@/components/ui/button"
 import { formSchema } from "@/schemas/asistenciaSchema"
 import { useEffect, useState } from "react"
 import { listarKids } from "@/server/actions/kid"
-import { Prisma } from "@prisma/client"
+import { type Prisma } from "@prisma/client"
 import { tomaAsistencia } from "@/server/actions/asistencia"
 
 type Kids = Prisma.PromiseReturnType<typeof listarKids>
 
 export type AsistenciaForm = z.infer<typeof formSchema>
 interface FormAsistenciaProps {
-    cursoId?: string
+    cursoId: string
     fecha: Date
 }
 
@@ -57,7 +57,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
         }
         obtenerKids().catch((e) => `Error al obtener la lista de kids ${e}`)
-    }, [cursoId])
+    }, [cursoId, form])
 
 
 
