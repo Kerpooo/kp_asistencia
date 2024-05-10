@@ -9,58 +9,55 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { type listarCursos } from "@/server/actions/curso";
-import { type Prisma } from "@prisma/client";
+import { listarCursos } from "@/server/actions/curso"
+import { useCursoStore } from "@/store/zustand"
+import { type Prisma, DIAS } from "@prisma/client"
+import { useEffect, useState } from "react"
 
-const DIAS = [
-    'DOMINGO',
-    'LUNES',
-    'MARTES',
-    'MIERCOLES',
-    'JUEVES',
-    'VIERNES',
-    'SABADO'
-]
+
 
 export type Cursos = Prisma.PromiseReturnType<typeof listarCursos>
 interface SelectCursoProps {
-    cursos: Cursos | undefined
     fecha: Date
 }
 
-export const SelectCurso = ({ cursos, fecha }: SelectCursoProps) => {
+export const SelectCurso = ({ fecha }: SelectCursoProps) => {
+    const { setCursoSeleccionado } = useCursoStore()
+    const [cursos, setCursos] = useState<Cursos>()
+    const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO']
+    const diaActual = dias[fecha.getDay()]
+    useEffect(() => {
+        const obtenerCursos = async () => {
+            const listaCursos = await listarCursos()
+            if (diaActual) {
+                const diaEnum = Object.values(DIAS).find(dia => dia === diaActual)
+                if (diaEnum) {
+                    const cursosDia = listaCursos.filter(({ dia_semana }) => dia_semana.includes(diaEnum))
+                    setCursos(cursosDia)
+                }
+            }
+        }
+        obtenerCursos().catch((e) => {
+            return `Error Obteniendo Cursos ${e}`
+        })
+    }, [fecha]
+    )
     // Selecciona los cursos que se den ese dia especifico
 
-
-    if (cursos) {
-        const cursosDia = cursos.filter((curso) => curso.dia_semana === DIAS[fecha.getDay()])
-
-        return (
-            <Select>
-                <SelectTrigger>
-                    {(cursosDia.length > 0) ? <SelectValue placeholder="Cursos" /> : <SelectValue placeholder="..." />}
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        {(cursosDia.length > 0) ? <SelectLabel>Cursos</SelectLabel> : <SelectLabel>No hay cursos este dia</SelectLabel>}
-                        {(cursosDia.length > 0) && cursosDia.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-        )
-    }
-
     return (
-        <Select disabled>
+        <Select onValueChange={(value) => setCursoSeleccionado(value)}>
             <SelectTrigger>
-                <SelectValue placeholder="Cursos..." />
+                <SelectValue placeholder="Cursos" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Cursos</SelectLabel>
+                    {cursos?.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
                 </SelectGroup>
             </SelectContent>
         </Select>
     )
+
+
 
 }
