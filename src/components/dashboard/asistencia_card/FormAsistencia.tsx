@@ -18,10 +18,11 @@ import { formSchema } from "@/schemas/asistenciaSchema"
 import { useEffect, useState } from "react"
 import { listarKids } from "@/server/actions/kid"
 import { Prisma } from "@prisma/client"
+import { tomaAsistencia } from "@/server/actions/asistencia"
 
 type Kids = Prisma.PromiseReturnType<typeof listarKids>
 
-type AsistenciaForm = z.infer<typeof formSchema>
+export type AsistenciaForm = z.infer<typeof formSchema>
 interface FormAsistenciaProps {
     cursoId?: string
     fecha: Date
@@ -29,15 +30,6 @@ interface FormAsistenciaProps {
 
 export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
-    const [kids, setKids] = useState<Kids>()
-    useEffect(() => {
-        const obtenerKids = async () => {
-            const listakids = await listarKids()
-            setKids(listakids)
-
-        }
-        obtenerKids().catch((e) => `Error al obtener la lista de kids ${e}`)
-    }, [])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -46,15 +38,32 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
             kids: [],
             fecha: fecha,
             hora_toma: new Date(),
+            asistio: true,
 
 
         },
     })
 
 
+
+    const [kids, setKids] = useState<Kids>()
+    useEffect(() => {
+        const obtenerKids = async () => {
+            const listakids = await listarKids()
+            const filteredKids = listakids.filter((kid) => (kid.cursoId === cursoId))
+            setKids(filteredKids)
+            form.resetField("kids")
+            form.setValue("cursoId", cursoId)
+
+        }
+        obtenerKids().catch((e) => `Error al obtener la lista de kids ${e}`)
+    }, [cursoId])
+
+
+
     async function onSubmit(data: AsistenciaForm) {
         try {
-            // await crearFamilia(data);
+            await tomaAsistencia(data)
             toast({
                 title: "Datos guardados correctamente",
                 variant: "success"
@@ -70,7 +79,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-8">
                 <FormField
                     control={form.control}
                     name="kids"
@@ -113,7 +122,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full">Submit</Button>
+                <Button type="submit" className="w-full">Enviar</Button>
             </form>
         </Form>
     )

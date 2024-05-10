@@ -106,6 +106,7 @@ model Curso {
 }
 
 model Asistencia {
+    id         String   @id @default(cuid())
     kid        Kid      @relation(fields: [kidId], references: [id])
     kidId      String
     curso      Curso    @relation(fields: [cursoId], references: [id])
@@ -113,9 +114,9 @@ model Asistencia {
     fecha      DateTime
     asistio    Boolean  @default(false)
     hora_toma  DateTime @default(now())
-    tomada_por String
+    tomada_por String?
 
-    @@id([kidId, cursoId])
+    @@index([kidId, cursoId])
 }
 
 enum DIAS {
