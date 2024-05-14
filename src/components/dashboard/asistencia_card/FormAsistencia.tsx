@@ -31,12 +31,12 @@ interface FormAsistenciaProps {
 export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
 
+    console.log(fecha)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
 
             kids: [],
-            fecha: fecha,
             hora_toma: new Date(),
             asistio: true,
 
@@ -46,6 +46,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
 
 
+    // NOTE: Reinicial el valor del campo kids para que no se guarden al seleccionar otro curso
     const [kids, setKids] = useState<Kids>()
     useEffect(() => {
         const obtenerKids = async () => {
@@ -54,6 +55,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
             setKids(filteredKids)
             form.resetField("kids")
             form.setValue("cursoId", cursoId)
+            form.setValue("fecha", fecha)
 
         }
         obtenerKids().catch((e) => `Error al obtener la lista de kids ${e}`)
