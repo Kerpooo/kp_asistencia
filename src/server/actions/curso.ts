@@ -74,3 +74,23 @@ export async function listarCursos() {
         throw error
     }
 }
+
+
+export async function obtenerCursoKids(id: string) {
+    try {
+        const cursoKids = await prisma.curso.findUnique({
+            where: { id },
+            include: {
+                Kid: { select: { id: true } }
+            }
+        })
+
+        return cursoKids
+
+    } catch (error) {
+        console.error("Error al obtener el curso con la lista de estudiantes:", error)
+        throw error
+    }
+
+
+}

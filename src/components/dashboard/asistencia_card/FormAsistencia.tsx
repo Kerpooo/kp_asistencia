@@ -31,7 +31,6 @@ interface FormAsistenciaProps {
 export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
 
-    console.log(fecha)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -59,7 +58,8 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
 
         }
         obtenerKids().catch((e) => `Error al obtener la lista de kids ${e}`)
-    }, [cursoId, form])
+    }, [cursoId, form, fecha])
+
 
 
 
@@ -71,10 +71,13 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
                 variant: "success"
             });
         } catch (error) {
-            toast({
-                title: "Error al guardar los datos",
-                variant: "destructive"
-            });
+            if (error instanceof Error) {
+                toast({
+                    title: "Error al guardar los datos",
+                    description: error.message,
+                    variant: "destructive"
+                })
+            }
         }
     }
 

@@ -33,7 +33,13 @@ export const SelectCurso = ({ fecha }: SelectCursoProps) => {
                 const diaEnum = Object.values(DIAS).find(dia => dia === diaActual)
                 if (diaEnum) {
                     const cursosDia = listaCursos.filter(({ dia_semana }) => dia_semana.includes(diaEnum))
-                    setCursos(cursosDia)
+                    if (cursosDia.length) {
+                        setCursos(cursosDia)
+                    }
+                    else {
+                        setCursos(undefined)
+                        setCursoSeleccionado(undefined)
+                    }
                 }
             }
         }
@@ -44,17 +50,28 @@ export const SelectCurso = ({ fecha }: SelectCursoProps) => {
     )
     // Selecciona los cursos que se den ese dia especifico
 
+    if (cursos && cursos.length > 0) {
+
+        return (
+            <Select onValueChange={(value) => setCursoSeleccionado(value)}>
+                <SelectTrigger>
+                    <SelectValue placeholder="Cursos" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        <SelectLabel>Cursos</SelectLabel>
+                        {cursos?.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        )
+    }
+
     return (
-        <Select onValueChange={(value) => setCursoSeleccionado(value)}>
+        <Select disabled >
             <SelectTrigger>
                 <SelectValue placeholder="Cursos" />
             </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectLabel>Cursos</SelectLabel>
-                    {cursos?.map(({ id, nombre }) => <SelectItem key={id} value={id}>{nombre}</SelectItem>)}
-                </SelectGroup>
-            </SelectContent>
         </Select>
     )
 

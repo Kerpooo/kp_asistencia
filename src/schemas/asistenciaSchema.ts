@@ -9,7 +9,7 @@ export const formSchema = z.object({
     asistio: z.boolean(),
     hora_toma: z.date(),
     tomada_por: z.string().optional(),
-    cursoId: z.string()
+    cursoId: z.string().min(1, { message: "Seleccione un curso" })
 
 })
 
