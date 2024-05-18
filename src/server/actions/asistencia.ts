@@ -6,12 +6,8 @@ import { getUserSessionServer } from "./user"
 import { format } from "date-fns"
 import { obtenerCursoKids } from "./curso"
 
-async function obtenerAsistencia() {
+export async function listarAsistencia() {
 
-}
-
-
-export async function listarAsistencia(cursoId?: string, fecha?: Date) {
     try {
         const listaAsistencias = await prisma.asistencia.findMany()
         return listaAsistencias
@@ -22,6 +18,35 @@ export async function listarAsistencia(cursoId?: string, fecha?: Date) {
     }
 
 }
+
+
+export async function listarAsistenciaCursoFecha(cursoId?: string, fecha?: Date) {
+
+
+    if (fecha && cursoId) {
+        try {
+            const listaAsistencia = await prisma.asistencia.findMany({
+                where: {
+                    fecha,
+                    cursoId
+                },
+                include: {
+                    kid: true
+                }
+
+            })
+            return listaAsistencia
+
+        }
+        catch (error) {
+            console.error("Error al obtener la asistencia en la fecha y curso seleccionado:", error)
+            throw error
+        }
+
+    }
+
+}
+
 
 export async function tomaAsistencia(formData: AsistenciaForm) {
 

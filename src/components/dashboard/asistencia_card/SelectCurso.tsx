@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import {
     Select,
     SelectContent,
@@ -9,9 +10,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { listarCursos } from "@/server/actions/curso"
 import { useCursoStore } from "@/store/zustand"
 import { type Prisma, DIAS } from "@prisma/client"
+import { CaretSortIcon } from "@radix-ui/react-icons"
 import { useEffect, useState } from "react"
 
 
@@ -22,7 +25,7 @@ interface SelectCursoProps {
 }
 
 export const SelectCurso = ({ fecha }: SelectCursoProps) => {
-    const { setCursoSeleccionado } = useCursoStore()
+    const { setCursoSeleccionado, cursoSeleccionado } = useCursoStore()
     const [cursos, setCursos] = useState<Cursos>()
     const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO']
     const diaActual = dias[fecha.getDay()]
@@ -38,7 +41,7 @@ export const SelectCurso = ({ fecha }: SelectCursoProps) => {
                     }
                     else {
                         setCursos(undefined)
-                        setCursoSeleccionado(undefined)
+                        setCursoSeleccionado("")
                     }
                 }
             }
@@ -46,14 +49,13 @@ export const SelectCurso = ({ fecha }: SelectCursoProps) => {
         obtenerCursos().catch((e) => {
             return `Error Obteniendo Cursos ${e}`
         })
-    }, [fecha, diaActual]
+    }, [fecha, diaActual, setCursoSeleccionado]
     )
     // Selecciona los cursos que se den ese dia especifico
 
     if (cursos && cursos.length > 0) {
-
         return (
-            <Select onValueChange={(value) => setCursoSeleccionado(value)}>
+            <Select onValueChange={(value) => setCursoSeleccionado(value)} value={cursoSeleccionado}>
                 <SelectTrigger>
                     <SelectValue placeholder="Cursos" />
                 </SelectTrigger>
@@ -68,11 +70,24 @@ export const SelectCurso = ({ fecha }: SelectCursoProps) => {
     }
 
     return (
-        <Select disabled >
-            <SelectTrigger>
-                <SelectValue placeholder="Cursos" />
-            </SelectTrigger>
-        </Select>
+
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                        variant="outline"
+                        className="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+                    >
+                        Cursos
+                        <CaretSortIcon className="h-4 w-4 opacity-50" />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>No hay cursos asignados este día</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+
     )
 
 

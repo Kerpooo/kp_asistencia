@@ -61,8 +61,6 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
     }, [cursoId, form, fecha])
 
 
-
-
     async function onSubmit(data: AsistenciaForm) {
         try {
             await tomaAsistencia(data)
@@ -82,53 +80,62 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
     }
 
 
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-8">
-                <FormField
-                    control={form.control}
-                    name="kids"
-                    render={() => (
-                        <FormItem>
-                            {kids?.map(({ id, nombre, apellido }) => (
-                                <FormField
-                                    key={id}
-                                    control={form.control}
-                                    name="kids"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={id}
-                                                className="flex flex-row items-start space-x-3 space-y-0"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(id)}
-                                                        onCheckedChange={(checked) => {
-                                                            return checked
-                                                                ? field.onChange([...field.value, id])
-                                                                : field.onChange(
-                                                                    field.value?.filter(
-                                                                        (value) => value !== id
+    if (cursoId) {
+
+        return (
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-8">
+
+
+                    <FormField
+                        control={form.control}
+                        name="kids"
+                        render={() => (
+                            <FormItem>
+                                {kids?.map(({ id, nombre, apellido }) => (
+                                    <FormField
+                                        key={id}
+                                        control={form.control}
+                                        name="kids"
+                                        render={({ field }) => {
+                                            return (
+                                                <FormItem
+                                                    key={id}
+                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                >
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value?.includes(id)}
+                                                            onCheckedChange={(checked) => {
+                                                                return checked
+                                                                    ? field.onChange([...field.value, id])
+                                                                    : field.onChange(
+                                                                        field.value?.filter(
+                                                                            (value) => value !== id
+                                                                        )
                                                                     )
-                                                                )
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal">
-                                                    {nombre + apellido}
-                                                </FormLabel>
-                                            </FormItem>
-                                        )
-                                    }}
-                                />
-                            ))}
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit" className="w-full">Enviar</Button>
-            </form>
-        </Form>
-    )
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="text-sm font-normal">
+                                                        {nombre + apellido}
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )
+                                        }}
+                                    />
+                                ))}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <Button type="submit" className="w-full">Enviar</Button>
+                </form>
+            </Form>
+        )
+
+    }
+
+    return <h1 className="text-center">Seleccione un curso</h1>
 }
