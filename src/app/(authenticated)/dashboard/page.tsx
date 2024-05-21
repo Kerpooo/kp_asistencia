@@ -1,7 +1,5 @@
 import AsistenciaCard from "@/components/dashboard/asistencia_card/AsistenciaCard"
 import FamiliaCard from "@/components/dashboard/familia_card/FamiliaCard"
-import { Button } from "@/components/ui/button"
-import { CardTitle, CardHeader, CardContent, Card, CardDescription } from "@/components/ui/card"
 
 export default function DashboardPage() {
     return (
@@ -15,7 +13,7 @@ export default function DashboardPage() {
                 <FamiliaCard />
 
             </div>
-            <Card>
+            {/* <Card>
                 <CardHeader>
                     <CardTitle>Statistics</CardTitle>
                     <CardDescription>View attendance statistics.</CardDescription>
@@ -75,7 +73,7 @@ export default function DashboardPage() {
                         </div>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> */}
         </main>
     )
 }

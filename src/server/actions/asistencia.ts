@@ -3,8 +3,6 @@
 import { type AsistenciaForm } from "@/components/dashboard/asistencia_card/FormAsistencia"
 import { prisma } from "@/lib/prisma"
 import { getUserSessionServer } from "./user"
-import { format } from "date-fns"
-import { obtenerCursoKids } from "./curso"
 
 export async function listarAsistencia() {
 
@@ -20,99 +18,92 @@ export async function listarAsistencia() {
 }
 
 
-export async function listarAsistenciaCursoFecha(cursoId?: string, fecha?: Date) {
+export async function obtenerAsistenciaAlumnos(cursoId: string, fecha: Date) {
 
+    try {
+        const asistencia = await prisma.asistencia.findFirst({
+            where: {
+                cursoId,
+                fecha
 
-    if (fecha && cursoId) {
-        try {
-            const listaAsistencia = await prisma.asistencia.findMany({
-                where: {
-                    fecha,
-                    cursoId
-                },
-                include: {
-                    kid: true
+            },
+            include: {
+                Asistencia_Alumnos: {
+                    include: {
+                        kid: {
+                            select: {
+                                nombre: true,
+                                apellido: true
+                            }
+                        },
+                    }
+
                 }
+            }
+        })
 
-            })
-            return listaAsistencia
-
-        }
-        catch (error) {
-            console.error("Error al obtener la asistencia en la fecha y curso seleccionado:", error)
-            throw error
-        }
-
+        return asistencia
+    }
+    catch (error) {
+        console.error("Error al obtener la asistencia:", error)
+        throw error
     }
 
 }
 
 
-export async function tomaAsistencia(formData: AsistenciaForm) {
+async function obtenerAsistenciaFechaCurso(cursoId: string, fecha: Date) {
 
-    // NOTE: VALIDA SI YA HAY DATOS CON ESA FECHA HAY CURSO GUARDADOS
-    const { fecha: fechaForm, cursoId: cursoIdForm } = formData
-    const listaAsistencias = await listarAsistencia()
-    const formatFechaForm = format(fechaForm, 'PPP')
+    try {
+        const asistencia = await prisma.asistencia.findFirst({
+            where: {
+                cursoId,
+                fecha
 
-    // COMPARA VALORES DE ENTRADA CON LOS VALORES DE CADA UNO DE LOS CURSOS PRESENTES
-    const fechaCursoValido = listaAsistencias.map(({ fecha, cursoId }) => {
-        const formatFecha = format(fecha, 'PPP')
-        return (formatFecha + cursoId === formatFechaForm + cursoIdForm)
-    })
+            }
+        })
 
-
-    //NOTE: RESTRICCION DE CUANTAS VECES SE PUEDE TOMAR LA ASISTENCIA
-    if (!fechaCursoValido.includes(true)) {
-
-        // Obtiene la sesión del usuario
-        const userId = await getUserSessionServer()
-
-        // Obtiene la lista de todos los alumnos del curso
-        const kidsCurso = await obtenerCursoKids(cursoIdForm)
-
-        //DIFERENCIA DE LOS ALUMNOS QUE ASISTEN Y NO ASISTEN
-        const kidsFromCursoSet = new Set(kidsCurso?.Kid.map(({ id }) => id))
-
-        // Copia de la lista de alumnos que asistieron en el formulario
-        const kidsListAsistenciaSet = new Set(formData.kids)
-
-        // Calcula la lista de alumnos que no asistieron
-        const listaFaltantes = [...kidsFromCursoSet].filter(id => !kidsListAsistenciaSet.has(id))
-
-        // Genera la lista de asistencia
-        const LISTA_TOTAL = [
-            ...formData.kids.map(id => ({ id, asistio: true })),
-            ...listaFaltantes.map(id => ({ id, asistio: false }))
-        ]
-
-
-        const listaAsistencia = LISTA_TOTAL.map(({ id, asistio }) => ({
-            kidId: id,
-            cursoId: formData.cursoId,
-            fecha: formData.fecha,
-            asistio,
-            hora_toma: formData.hora_toma,
-            tomada_por: userId?.email
-        }))
-
-        try {
-            const asistencia = await prisma.asistencia.createMany({
-                data: listaAsistencia
-
-            })
-
-            return asistencia
-
-        } catch (error) {
-
-            console.error("Error al tomar la asistencia:", error);
-            throw error;
-
-        }
-
+        return asistencia
+    }
+    catch (error) {
+        console.error("Error al obtener la asistencia:", error)
+        throw error
     }
 
-    throw new Error('Ya se tomo la asistencia de este curso en esta fecha')
+}
 
+
+export async function tomaAsistencia({ cursoId, kids, fecha, hora_toma }: AsistenciaForm) {
+
+
+    const asistenciaExistente = await obtenerAsistenciaFechaCurso(cursoId, fecha)
+
+
+    // Restricción de cuántas veces se puede tomar la asistencia
+    if (asistenciaExistente) {
+        throw Error('Ya se tomó la asistencia de este curso en esta fecha')
+    }
+
+    // Obtiene la sesión del usuario
+    const userId = await getUserSessionServer()
+
+    try {
+        // Crea la nueva asistencia en la base de datos
+        const asistencia = await prisma.asistencia.create({
+            data: {
+                fecha,
+                cursoId,
+                tomada_por: userId?.email,
+                hora_toma,
+                Asistencia_Alumnos: {
+                    create: kids
+                }
+            }
+        })
+
+        return asistencia
+    } catch (error) {
+        console.error("Error al tomar la asistencia:", error)
+        throw error
+    }
 }

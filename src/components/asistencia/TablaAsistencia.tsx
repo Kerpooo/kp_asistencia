@@ -6,13 +6,20 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { type ListaAsistenciaType } from "@/types/prisma_types"
 import { Badge } from "../ui/badge"
 
 
 interface TablaAsistenciaProps {
-    data: ListaAsistenciaType
+    data: {
+        kidId: string
+        asistio: boolean
+        kid: {
+            nombre: string
+            apellido: string
+        }
+    }[]
 }
+
 
 
 export const TablaAsistencia = ({ data }: TablaAsistenciaProps) => {
@@ -29,9 +36,9 @@ export const TablaAsistencia = ({ data }: TablaAsistenciaProps) => {
             <TableBody>
 
                 {
-                    data?.map(({ asistio, kid }) => {
+                    data?.map(({ asistio, kidId, kid }) => {
                         return (
-                            <TableRow key={kid.id}>
+                            <TableRow key={kidId}>
                                 <TableCell className="font-semibold  text-center">{kid.nombre} </TableCell>
                                 <TableCell className="font-semibold  text-center">{kid.apellido} </TableCell>
                                 <TableCell className="flex justify-center items-center w-full h-full md:w-auto md:h-auto">

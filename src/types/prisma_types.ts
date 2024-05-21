@@ -1,5 +1,4 @@
-import { listarAsistenciaCursoFecha } from "@/server/actions/asistencia"
-import { Prisma } from "@prisma/client"
+import { type obtenerAsistenciaAlumnos } from "@/server/actions/asistencia"
+import { type Prisma } from "@prisma/client"
 
-
-export type ListaAsistenciaType = Prisma.PromiseReturnType<typeof listarAsistenciaCursoFecha>
+export type AsistenciaType = Prisma.PromiseReturnType<typeof obtenerAsistenciaAlumnos>

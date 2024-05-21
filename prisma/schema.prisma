@@ -70,17 +70,17 @@ model Encargado {
 }
 
 model Kid {
-    id             String       @id @default(cuid())
-    nombre         String
-    apellido       String
-    ano_nacimiento DateTime
-    encargado      Encargado    @relation(fields: [encargadoId], references: [id])
-    encargadoId    String
-    pagos          Pagos[]
-    asistencia     Asistencia[]
-    activo         Boolean      @default(true)
-    curso          Curso?       @relation(fields: [cursoId], references: [id])
-    cursoId        String?
+    id                String              @id @default(cuid())
+    nombre            String
+    apellido          String
+    ano_nacimiento    DateTime            @db.Date
+    encargado         Encargado           @relation(fields: [encargadoId], references: [id])
+    encargadoId       String
+    pagos             Pagos[]
+    activo            Boolean             @default(true)
+    curso             Curso?              @relation(fields: [cursoId], references: [id])
+    cursoId           String?
+    Asistencia_Alumno Asistencia_Alumno[]
 }
 
 model Pagos {
@@ -106,17 +106,24 @@ model Curso {
 }
 
 model Asistencia {
-    id         String   @id @default(cuid())
-    kid        Kid      @relation(fields: [kidId], references: [id])
-    kidId      String
-    curso      Curso    @relation(fields: [cursoId], references: [id])
-    cursoId    String
-    fecha      DateTime
-    asistio    Boolean  @default(false)
-    hora_toma  DateTime @default(now())
-    tomada_por String?
+    id                 String              @id @default(cuid())
+    curso              Curso               @relation(fields: [cursoId], references: [id])
+    cursoId            String
+    fecha              DateTime            @db.Date
+    hora_toma          DateTime            @default(now())
+    tomada_por         String?
+    Asistencia_Alumnos Asistencia_Alumno[]
+}
 
-    @@index([kidId, cursoId])
+model Asistencia_Alumno {
+    id           String     @id @default(cuid())
+    asistencia   Asistencia @relation(fields: [asistenciaId], references: [id])
+    asistenciaId String
+    kid          Kid        @relation(fields: [kidId], references: [id])
+    kidId        String
+    asistio      Boolean    @default(false)
+
+    @@index([asistenciaId, kidId])
 }
 
 enum DIAS {

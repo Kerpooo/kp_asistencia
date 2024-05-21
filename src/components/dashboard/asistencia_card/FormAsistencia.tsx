@@ -8,10 +8,9 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
 } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { toast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { formSchema } from "@/schemas/asistenciaSchema"
@@ -19,6 +18,7 @@ import { useEffect, useState } from "react"
 import { listarKids } from "@/server/actions/kid"
 import { type Prisma } from "@prisma/client"
 import { tomaAsistencia } from "@/server/actions/asistencia"
+
 
 type Kids = Prisma.PromiseReturnType<typeof listarKids>
 
@@ -29,37 +29,30 @@ interface FormAsistenciaProps {
 }
 
 export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
-
-
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<AsistenciaForm>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-
             kids: [],
             hora_toma: new Date(),
-            asistio: true,
-
-
         },
     })
 
+    const [kids, setKids] = useState<Kids>([])
 
-
-    // NOTE: Reinicial el valor del campo kids para que no se guarden al seleccionar otro curso
-    const [kids, setKids] = useState<Kids>()
     useEffect(() => {
         const obtenerKids = async () => {
             const listakids = await listarKids()
             const filteredKids = listakids.filter((kid) => (kid.cursoId === cursoId))
             setKids(filteredKids)
-            form.resetField("kids")
-            form.setValue("cursoId", cursoId)
-            form.setValue("fecha", fecha)
-
+            form.reset({
+                kids: filteredKids.map(kid => ({ kidId: kid.id, asistio: false })),
+                cursoId,
+                fecha,
+                hora_toma: new Date(),
+            })
         }
         obtenerKids().catch((e) => `Error al obtener la lista de kids ${e}`)
     }, [cursoId, form, fecha])
-
 
     async function onSubmit(data: AsistenciaForm) {
         try {
@@ -67,74 +60,53 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
             toast({
                 title: "Datos guardados correctamente",
                 variant: "success"
-            });
+            })
         } catch (error) {
-            if (error instanceof Error) {
-                toast({
-                    title: "Error al guardar los datos",
-                    description: error.message,
-                    variant: "destructive"
-                })
-            }
+            toast({
+                title: "Error al guardar los datos",
+                variant: "destructive"
+            })
         }
     }
 
-
     if (cursoId) {
-
         return (
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-8">
-
-
                     <FormField
                         control={form.control}
                         name="kids"
                         render={() => (
                             <FormItem>
-                                {kids?.map(({ id, nombre, apellido }) => (
-                                    <FormField
-                                        key={id}
+                                {kids.map((kid, index) => (
+                                    <Controller
+                                        key={kid.id}
                                         control={form.control}
-                                        name="kids"
-                                        render={({ field }) => {
-                                            return (
-                                                <FormItem
-                                                    key={id}
-                                                    className="flex flex-row items-start space-x-3 space-y-0"
-                                                >
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value?.includes(id)}
-                                                            onCheckedChange={(checked) => {
-                                                                return checked
-                                                                    ? field.onChange([...field.value, id])
-                                                                    : field.onChange(
-                                                                        field.value?.filter(
-                                                                            (value) => value !== id
-                                                                        )
-                                                                    )
-                                                            }}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="text-sm font-normal">
-                                                        {nombre + apellido}
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )
-                                        }}
+                                        name={`kids.${index}.asistio`}
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value}
+                                                        onCheckedChange={(checked) => {
+                                                            field.onChange(checked)
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel className="text-sm font-normal">
+                                                    {kid.nombre + " " + kid.apellido}
+                                                </FormLabel>
+                                            </FormItem>
+                                        )}
                                     />
                                 ))}
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
-
-                    <Button type="submit" className="w-full">Enviar</Button>
+                    <Button type="submit" className="w-full">Guardar</Button>
                 </form>
             </Form>
         )
-
     }
 
     return <h1 className="text-center">Seleccione un curso</h1>

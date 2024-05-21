@@ -1,6 +1,6 @@
-import { listarAsistenciaCursoFecha } from "@/server/actions/asistencia"
+import { obtenerAsistenciaAlumnos } from "@/server/actions/asistencia"
 import { useEffect, useState } from "react"
-import { type ListaAsistenciaType } from "@/types/prisma_types"
+import { type AsistenciaType } from "@/types/prisma_types"
 import { TablaAsistencia } from "./TablaAsistencia"
 
 interface ListaAsistenciaProps {
@@ -13,19 +13,25 @@ interface ListaAsistenciaProps {
 
 export const ListaAsistencia = ({ cursoId, fecha }: ListaAsistenciaProps) => {
 
-    const [listaAsistencia, setListaAsistencia] = useState<ListaAsistenciaType>()
+    const [listaAsistencia, setListaAsistencia] = useState<AsistenciaType>()
 
     useEffect(() => {
         const obtenerListaAsistencia = async () => {
-            const listaAsistencia = await listarAsistenciaCursoFecha(cursoId, fecha)
-            setListaAsistencia(listaAsistencia)
+            if (cursoId && fecha) {
+                const listaAsistencia = await obtenerAsistenciaAlumnos(cursoId, fecha)
+                setListaAsistencia(listaAsistencia)
+            }
         }
 
         obtenerListaAsistencia().catch((e => `Error al obtener la lista de asistencia ${e}`))
     }, [fecha, cursoId])
 
-    if (listaAsistencia && listaAsistencia?.length > 0) {
-        return <TablaAsistencia data={listaAsistencia} />
+
+
+    if (listaAsistencia) {
+
+        const { Asistencia_Alumnos: listaAlumnos } = listaAsistencia
+        return <TablaAsistencia data={listaAlumnos} />
 
     }
 
