@@ -1,9 +1,9 @@
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 import { navItems } from "./SideNavBar"
-import Image from "next/image"
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+
 
 interface ItemProps {
     url: string
@@ -57,31 +57,12 @@ export const NavBar = () => {
             <div className="relative ml-auto flex-1 md:grow-0">
 
             </div>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button className="overflow-hidden rounded-full" size="icon" variant="outline">
-                        <Image
-                            alt="Avatar"
-                            className="overflow-hidden rounded-full"
-                            height={36}
-                            src="/placeholder.svg"
-                            style={{
-                                aspectRatio: "36/36",
-                                objectFit: "cover",
-                            }}
-                            width={36}
-                        />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <SignedOut>
+                <SignInButton />
+            </SignedOut>
+            <SignedIn>
+                <UserButton />
+            </SignedIn>
         </header>
     )
 }

@@ -85,7 +85,7 @@ export async function tomaAsistencia({ cursoId, kids, fecha, hora_toma }: Asiste
     }
 
     // Obtiene la sesión del usuario
-    const userId = await getUserSessionServer()
+    const usuario = await getUserSessionServer()
 
     try {
         // Crea la nueva asistencia en la base de datos
@@ -93,7 +93,7 @@ export async function tomaAsistencia({ cursoId, kids, fecha, hora_toma }: Asiste
             data: {
                 fecha,
                 cursoId,
-                tomada_por: userId?.email,
+                tomada_por: usuario?.fullName,
                 hora_toma,
                 Asistencia_Alumnos: {
                     create: kids

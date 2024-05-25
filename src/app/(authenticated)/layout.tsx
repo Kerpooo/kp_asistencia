@@ -1,23 +1,13 @@
 
-import { NavBar } from "@/components/navbar/NavBar";
-import { SideNavBar } from "@/components/navbar/SideNavBar";
-import { authOptions } from "@/server/auth";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { NavBar } from "@/components/navbar/NavBar"
+import { SideNavBar } from "@/components/navbar/SideNavBar"
 
 
 export default async function AuthLayout({
     children
 }: {
-    children: React.ReactNode;
+    children: React.ReactNode
 }) {
-    const session = await getServerSession(authOptions)
-
-
-    if (!session) {
-        redirect('/api/auth/signin')
-
-    }
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40" >
@@ -27,5 +17,5 @@ export default async function AuthLayout({
                 {children}
             </div>
         </div >
-    );
+    )
 }
