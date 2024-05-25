@@ -1,86 +1,72 @@
 import {
-    ChevronDownIcon,
-    CircleIcon,
-    PlusIcon,
-    StarIcon,
-} from "@radix-ui/react-icons"
+    CheckCircledIcon,
+    CrossCircledIcon,
 
-import { Button } from "@/components/ui/button"
+} from "@radix-ui/react-icons"
 import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
+import { type $Enums } from "@prisma/client"
+import { Badge } from "@/components/ui/badge"
 
-export function DemoGithub() {
+
+interface CardProps {
+    id: string
+    nombre: string
+    hora_inicio: Date
+    hora_fin: Date
+    dia_semana: $Enums.DIAS[]
+    activo: boolean
+    inscritos: number
+}
+
+
+export default function CursosCard({ nombre, activo, dia_semana, hora_inicio, hora_fin, inscritos }: CardProps) {
     return (
-        <Card>
-            <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 space-y-0">
+        <Card className="w-full">
+            <CardHeader className="grid grid-cols-1 md:grid-cols-[1fr_110px] items-start gap-4">
                 <div className="space-y-1">
-                    <CardTitle>shadcn/ui</CardTitle>
+                    <CardTitle>{nombre}</CardTitle>
                     <CardDescription>
-                        Beautifully designed components that you can copy and paste into
-                        your apps. Accessible. Customizable. Open Source.
+                        {`${hora_inicio.getUTCHours()}:${hora_inicio.getUTCMinutes()}`} - {`${hora_fin.getUTCHours()}:${hora_fin.getUTCMinutes()}`}
                     </CardDescription>
-                </div>
-                <div className="flex items-center space-x-1 rounded-md bg-secondary text-secondary-foreground">
-                    <Button variant="secondary" className="px-3 shadow-none">
-                        <StarIcon className="mr-2 h-4 w-4" />
-                        Star
-                    </Button>
-                    <Separator orientation="vertical" className="h-[20px]" />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="secondary" className="px-2 shadow-none">
-                                <ChevronDownIcon className="h-4 w-4 text-secondary-foreground" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                            align="end"
-                            alignOffset={-5}
-                            className="w-[200px]"
-                            forceMount
-                        >
-                            <DropdownMenuLabel>Suggested Lists</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuCheckboxItem checked>
-                                Future Ideas
-                            </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>My Stack</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>Inspiration</DropdownMenuCheckboxItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <PlusIcon className="mr-2 h-4 w-4" /> Create List
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <CardDescription>
+                    </CardDescription>
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="flex space-x-4 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                        <CircleIcon className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
-                        TypeScript
+                <div className="flex flex-col md:flex-row md:items-center md:space-x-4 text-sm text-muted-foreground space-y-4 md:space-y-0">
+                    <div className="flex flex-wrap gap-2 items-center">
+                        {dia_semana.map((dia) =>
+                            <Badge className="hover:cursor-pointer" key={dia}>{dia}</Badge>
+                        )}
                     </div>
-                    <div className="flex items-center">
-                        <StarIcon className="mr-1 h-3 w-3" />
-                        20k
-                    </div>
-                    <div>Updated April 2023</div>
                 </div>
             </CardContent>
+            <CardFooter className="flex items-center justify-between">
+                <div>
+                    Inscritos: {inscritos}
+                </div>
+                <div className="flex items-center gap-2">
+                    {activo ? (
+                        <>
+                            <CheckCircledIcon className="text-green-600 h-8 w-h-8" />
+                            <span>Activo</span>
+                        </>
+                    ) : (
+                        <>
+                            <CrossCircledIcon className="text-red-600 h-8 w-h-8" />
+                            <span>Inactivo</span>
+                        </>
+                    )}
+                </div>
+            </CardFooter>
         </Card>
+
     )
 }

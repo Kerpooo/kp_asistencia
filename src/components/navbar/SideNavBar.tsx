@@ -4,7 +4,7 @@ import Link from "next/link"
 
 import { FaPencil, FaPersonShelter } from "react-icons/fa6"
 import { TbMoodKid } from "react-icons/tb"
-import { MdSpaceDashboard } from "react-icons/md"
+import { MdOutlineChecklist, MdSpaceDashboard } from "react-icons/md"
 
 export const navItems = [
     {
@@ -13,13 +13,18 @@ export const navItems = [
         icono: <MdSpaceDashboard className="h-5 w-5" />
     },
     {
+        url: "/asistencia",
+        texto: "Asistencia",
+        icono: <MdOutlineChecklist className="h-5 w-5" />
+    },
+    {
         url: "/kids",
         texto: "Niño",
         icono: <TbMoodKid className="h-5 w-5" />
     },
     {
-        url: "/clases",
-        texto: "Clases",
+        url: "/cursos",
+        texto: "Cursos",
         icono: <FaPencil className="h-5 w-5" />
     },
     {

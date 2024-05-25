@@ -97,8 +97,8 @@ model Pagos {
 model Curso {
     id          String       @id @default(cuid())
     nombre      String       @unique
-    hora_inicio DateTime
-    hora_fin    DateTime
+    hora_inicio DateTime     @db.Time
+    hora_fin    DateTime     @db.Time
     dia_semana  DIAS[]       @default([LUNES])
     asistencia  Asistencia[]
     activo      Boolean      @default(true)

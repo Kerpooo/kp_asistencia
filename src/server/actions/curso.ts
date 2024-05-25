@@ -66,7 +66,11 @@ export async function obtenerCurso(id: string) {
 
 export async function listarCursos() {
     try {
-        const cursos = await prisma.curso.findMany()
+        const cursos = await prisma.curso.findMany({
+            include: {
+                Kid: true
+            }
+        })
         return cursos
     }
     catch (error) {
