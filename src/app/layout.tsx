@@ -2,7 +2,7 @@ import "@/styles/globals.css"
 import { cn } from "@/lib/utils"
 import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from "@clerk/localizations"
 
 
