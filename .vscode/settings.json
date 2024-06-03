@@ -3,6 +3,7 @@
         "auth",
         "db",
         "dashboard",
-        "modulo asistencia"
+        "modulo asistencia",
+        "cursos"
     ]
 }
