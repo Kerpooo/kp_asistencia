@@ -1,7 +1,9 @@
-'use client'
+"use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { type z } from "zod"
+
 import MultiSelectFormField from "@/components/ui/multi-select"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,23 +17,7 @@ import {
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { formSchema } from "@/schemas/cursoSchema"
-import { type $Enums } from "@prisma/client"
-import { formatISO9075 } from "date-fns"
-import { editarCurso } from "@/server/actions/curso"
-import { type CursoForm } from "@/components/cursos/AddForm"
-import { Switch } from "@/components/ui/switch"
-
-
-
-interface FormProps {
-    id: string
-    nombre: string
-    hora_inicio: Date
-    hora_fin: Date
-    dia_semana: $Enums.DIAS[]
-    activo: boolean
-
-}
+import { crearCurso } from "@/server/actions/curso"
 
 const diasSemana = [
     {
@@ -64,26 +50,23 @@ const diasSemana = [
     },
 ]
 
+export type CursoForm = z.infer<typeof formSchema>
 
-export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo }: FormProps) => {
-
-
+export default function AddForm() {
     const form = useForm<CursoForm>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            dias_semana: dia_semana,
-            nombre: nombre,
-            hora_inicio: formatISO9075(hora_inicio, { representation: 'time' }),
-            hora_fin: formatISO9075(hora_fin, { representation: 'time' }),
-            activo
+            dias_semana: [],
+            activo: true,
+            hora_fin: "",
+            hora_inicio: "",
+            nombre: ""
         },
     })
 
-
-
     async function onSubmit(data: CursoForm) {
         try {
-            await editarCurso(id, data)
+            await crearCurso(data)
             toast({
                 title: "Datos guardados correctamente",
                 variant: "success"
@@ -95,7 +78,6 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
             })
         }
     }
-
 
     return (
 
@@ -121,38 +103,19 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
                         </FormItem>
                     )}
                 />
-
-                <div className="flex gap-4">
-                    <FormField
-                        control={form.control}
-                        name="nombre"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Nombre</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Nombre" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="activo"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col items-center justify-center">
-                                <FormLabel>Activo</FormLabel>
-                                <FormControl>
-                                    <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
-                </div>
+                <FormField
+                    control={form.control}
+                    name="nombre"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Nombre</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Nombre" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <div className="flex justify-between gap-4">
                     <FormField
@@ -181,7 +144,6 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
                             </FormItem>
                         )}
                     />
-
                 </div>
 
                 <div className="flex justify-center">
@@ -191,7 +153,5 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
                 </div>
             </form>
         </Form>
-
-
     )
 }

@@ -1,18 +1,24 @@
 "use server"
-import { prisma } from "@/lib/prisma";
-import { type DIAS } from "@prisma/client";
+import { type CursoForm } from "@/components/cursos/AddForm"
+import { stringToDIAS } from "@/helpers/transformData"
+import { prisma } from "@/lib/prisma"
+import { revalidatePath } from "next/cache"
 
-export async function crearCurso(nombre: string, hora_inicio: Date, hora_fin: Date, dia_semana: DIAS[]) {
+
+
+export async function crearCurso({ nombre, hora_inicio, hora_fin, dias_semana }: CursoForm) {
+    const dias_semana_enum = dias_semana.map((dia_semana) => stringToDIAS(dia_semana))
+
     try {
         const curso = await prisma.curso.create({
             data: {
                 nombre,
-                hora_inicio,
-                hora_fin,
-                dia_semana,
+                hora_inicio: new Date(`2000-12-17T${hora_inicio}`),
+                hora_fin: new Date(`2000-12-17T${hora_fin}`),
+                dia_semana: dias_semana_enum,
             }
         })
-
+        revalidatePath('/cursos', "page")
         return curso
 
     } catch (error) {
@@ -24,7 +30,12 @@ export async function crearCurso(nombre: string, hora_inicio: Date, hora_fin: Da
 }
 
 
-export async function editarCurso(id: string, nombre: string, hora_inicio: Date, hora_fin: Date, dia_semana: DIAS[]) {
+export async function editarCurso(id: string, { nombre, hora_inicio, hora_fin, dias_semana, activo }: CursoForm) {
+
+    const dias_semana_enum = dias_semana.map((dia_semana) => stringToDIAS(dia_semana))
+
+
+
     try {
         const curso = await prisma.curso.update({
             where: {
@@ -32,12 +43,13 @@ export async function editarCurso(id: string, nombre: string, hora_inicio: Date,
             },
             data: {
                 nombre,
-                hora_inicio,
-                hora_fin,
-                dia_semana
+                hora_inicio: new Date(`2000-12-17T${hora_inicio}`),
+                hora_fin: new Date(`2000-12-17T${hora_fin}`),
+                dia_semana: dias_semana_enum,
+                activo
             }
         })
-
+        revalidatePath('/cursos', "page")
         return curso
 
     } catch (error) {

@@ -2,7 +2,7 @@ import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { navItems } from "./SideNavBar"
-import { RedirectToSignIn, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { RedirectToSignIn, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 
 interface ItemProps {

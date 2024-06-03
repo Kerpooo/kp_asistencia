@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card"
 import { type $Enums } from "@prisma/client"
 import { Badge } from "@/components/ui/badge"
+import { formatISO9075 } from "date-fns"
 
 
 interface CardProps {
@@ -33,7 +34,7 @@ export default function CursosCard({ nombre, activo, dia_semana, hora_inicio, ho
                 <div className="space-y-1">
                     <CardTitle>{nombre}</CardTitle>
                     <CardDescription>
-                        {`${hora_inicio.getUTCHours()}:${hora_inicio.getUTCMinutes()}`} - {`${hora_fin.getUTCHours()}:${hora_fin.getUTCMinutes()}`}
+                        {formatISO9075(hora_inicio, { representation: 'time' }).replace(':00', '')} - {formatISO9075(hora_fin, { representation: 'time' }).replace(':00', '')}
                     </CardDescription>
                     <CardDescription>
                     </CardDescription>

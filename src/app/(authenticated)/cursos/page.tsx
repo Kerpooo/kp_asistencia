@@ -4,12 +4,12 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { EditForm } from "@/components/cursos/EditForm"
+import { AddDialog } from "@/components/cursos/AddDialog"
 
 
 export default async function CursosPage() {
@@ -19,6 +19,9 @@ export default async function CursosPage() {
     const listaCursos = await listarCursos()
     return (
         <main className="flex min-h-[calc(100vh-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+            <div className="ml-auto flex items-center gap-2">
+                <AddDialog />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
 
                 {
