@@ -76,7 +76,16 @@ export async function obtenerKid(id: string) {
 
 export async function listarKids() {
     try {
-        const kids = await prisma.kid.findMany()
+        const kids = await prisma.kid.findMany({
+            include: {
+                encargado: {
+                    select: {
+                        nombre: true,
+                        apellido: true
+                    }
+                }
+            }
+        })
         return kids
     }
     catch (error) {
