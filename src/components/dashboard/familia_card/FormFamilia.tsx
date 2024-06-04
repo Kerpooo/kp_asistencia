@@ -1,6 +1,6 @@
 "use client"
 
-import { z } from "zod"
+import { type z } from "zod"
 import {
     Form,
     FormControl,
@@ -20,20 +20,9 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { es } from 'date-fns/locale';
 import { crearFamilia } from "@/server/actions/familia"
-
-const formSchema = z.object({
-    // encargadoShema
-    encargadoNombre: z.string({ required_error: "Nombre es obligatorio" }).min(2).max(10),
-    encargadoApellido: z.string({ required_error: "Apellido es obligatorio" }).min(2).max(10),
-    encargadoEmail: z.string({ required_error: "Correo es obligatorio" }).min(2).max(30).email("Este no es un correo valido"),
-    encargadoTelefono: z.string().min(2).max(50),
+import { formSchema } from "@/schemas/familiaSchema"
 
 
-    // kidSchema
-    kidNombre: z.string({ required_error: "Nombre es obligatorio" }).min(2).max(10),
-    kidApellido: z.string({ required_error: "Nombre es obligatorio" }).min(2).max(10),
-    anoNacimiento: z.date({ required_error: "Fecha de nacimiento obligatoria" }),
-})
 
 type FamilyFormValues = z.infer<typeof formSchema>
 
