@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
 import { es } from 'date-fns/locale';
 import { crearFamilia } from "@/server/actions/familia"
 import { formSchema } from "@/schemas/familiaSchema"
-
+import { usePathname } from 'next/navigation'
 
 
 type FamilyFormValues = z.infer<typeof formSchema>
@@ -48,11 +48,12 @@ export const FormFamilia = () => {
         },
     })
 
+    const pathname = usePathname()
 
 
     async function onSubmit(data: FamilyFormValues) {
         try {
-            await crearFamilia(data);
+            await crearFamilia(pathname, data);
             toast({
                 title: "Datos guardados correctamente",
                 variant: "success"

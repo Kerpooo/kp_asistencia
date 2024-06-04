@@ -1,8 +1,9 @@
 "use server"
 
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
-export async function crearFamilia(
+export async function crearFamilia(path: string,
     formData: {
         encargadoNombre: string, encargadoApellido: string, encargadoEmail: string, encargadoTelefono: string,
         kidNombre: string, kidApellido: string, anoNacimiento: Date
@@ -25,6 +26,7 @@ export async function crearFamilia(
                 }
             }
         })
+        revalidatePath(path, "page")
 
         return familia
 

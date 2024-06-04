@@ -3,6 +3,7 @@ import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuItem, DropdownMenuC
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { type ListarKidsType } from "@/types/prisma_types"
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi"
 import { differenceInYears } from "date-fns"
 
 
@@ -32,7 +33,7 @@ export const TableKids = ({ data }: TableData) => {
                         <TableRow key={id}>
                             <TableCell className="font-medium">{nombre}</TableCell>
                             <TableCell className="font-medium">{apellido}</TableCell>
-                            <TableCell className="hidden md:table-cell">{differenceInYears(ano_nacimiento, new Date())}</TableCell>
+                            <TableCell className="hidden md:table-cell">{differenceInYears(new Date(), ano_nacimiento)} años</TableCell>
                             <TableCell className="flex  w-full h-full md:w-auto md:h-auto">
                                 {activo ? (
                                     <Badge className="justify-center whitespace-nowrap min-w-20">Activo</Badge>
@@ -45,13 +46,14 @@ export const TableKids = ({ data }: TableData) => {
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button aria-haspopup="true" size="icon" variant="ghost">
+                                            <PiDotsThreeOutlineVerticalFill />
                                             <span className="sr-only">Toggle menu</span>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                        <DropdownMenuLabel>Opciones</DropdownMenuLabel>
                                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                                        <DropdownMenuItem>Asignar Curso</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
