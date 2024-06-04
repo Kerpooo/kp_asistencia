@@ -1,5 +1,5 @@
 import { type obtenerAsistenciaAlumnos } from "@/server/actions/asistencia"
-import { type listarCursos, type obtenerCurso } from "@/server/actions/curso"
+import { type listarCursos, type obtenerCurso, type listarEstudiantesCurso } from "@/server/actions/curso"
 import { type listarKids } from "@/server/actions/kid"
 import { type Prisma } from "@prisma/client"
 
@@ -13,3 +13,6 @@ export type CursoType = Prisma.PromiseReturnType<typeof obtenerCurso>
 
 //Kids
 export type ListarKidsType = Prisma.PromiseReturnType<typeof listarKids>
+
+//Lista Alumnos
+export type ListaAlumnosCurso = Prisma.PromiseReturnType<typeof listarEstudiantesCurso>

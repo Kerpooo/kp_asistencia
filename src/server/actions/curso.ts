@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
 
-
 export async function crearCurso({ nombre, hora_inicio, hora_fin, dias_semana }: CursoForm) {
     const dias_semana_enum = dias_semana.map((dia_semana) => stringToDIAS(dia_semana))
 
@@ -33,8 +32,6 @@ export async function crearCurso({ nombre, hora_inicio, hora_fin, dias_semana }:
 export async function editarCurso(id: string, { nombre, hora_inicio, hora_fin, dias_semana, activo }: CursoForm) {
 
     const dias_semana_enum = dias_semana.map((dia_semana) => stringToDIAS(dia_semana))
-
-
 
     try {
         const curso = await prisma.curso.update({
@@ -92,6 +89,28 @@ export async function listarCursos() {
 }
 
 
+export async function listarEstudiantesCurso(cursoId: string) {
+    try {
+        const estudiantes_curso = await prisma.curso.findUnique({
+            where: {
+                id: cursoId
+            },
+            include: {
+                Kid: true
+            }
+
+        })
+
+        return estudiantes_curso?.Kid
+
+    }
+    catch (error) {
+        console.error("Error al obtener la lista de estudiantes:", error)
+        throw error
+    }
+}
+
+
 export async function obtenerCursoKids(id: string) {
     try {
         const cursoKids = await prisma.curso.findUnique({
@@ -107,6 +126,4 @@ export async function obtenerCursoKids(id: string) {
         console.error("Error al obtener el curso con la lista de estudiantes:", error)
         throw error
     }
-
-
 }

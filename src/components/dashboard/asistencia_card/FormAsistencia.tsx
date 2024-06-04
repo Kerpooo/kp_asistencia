@@ -15,18 +15,17 @@ import { toast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { formSchema } from "@/schemas/asistenciaSchema"
 import { useEffect, useState } from "react"
-import { listarKids } from "@/server/actions/kid"
-import { type Prisma } from "@prisma/client"
 import { tomaAsistencia } from "@/server/actions/asistencia"
+import { listarEstudiantesCurso } from "@/server/actions/curso"
+import { ListaAlumnosCurso } from "@/types/prisma_types"
 
-
-type Kids = Prisma.PromiseReturnType<typeof listarKids>
 
 export type AsistenciaForm = z.infer<typeof formSchema>
 interface FormAsistenciaProps {
     cursoId: string
     fecha: Date
 }
+
 
 export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
     const form = useForm<AsistenciaForm>({
@@ -37,15 +36,14 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
         },
     })
 
-    const [kids, setKids] = useState<Kids>([])
+    const [kids, setKids] = useState<ListaAlumnosCurso>([])
 
     useEffect(() => {
         const obtenerKids = async () => {
-            const listakids = await listarKids()
-            const filteredKids = listakids.filter((kid) => (kid.cursoId === cursoId))
-            setKids(filteredKids)
+            const listakids = await listarEstudiantesCurso(cursoId)
+            setKids(listakids)
             form.reset({
-                kids: filteredKids.map(kid => ({ kidId: kid.id, asistio: false })),
+                kids: listakids?.map(kid => ({ kidId: kid.id, asistio: false })),
                 cursoId,
                 fecha,
                 hora_toma: new Date(),
@@ -78,7 +76,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
                         name="kids"
                         render={() => (
                             <FormItem>
-                                {kids.map((kid, index) => (
+                                {kids?.map((kid, index) => (
                                     <Controller
                                         key={kid.id}
                                         control={form.control}
