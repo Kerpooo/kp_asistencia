@@ -83,8 +83,10 @@ export async function listarKids() {
                         nombre: true,
                         apellido: true
                     }
-                }
+                },
+                Curso: true
             }
+
         })
         return kids
     }
