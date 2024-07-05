@@ -100,8 +100,8 @@ function Calendar({
 
           if (props.name === "years") {
 
-            const earliestYear = fromYear && fromMonth?.getFullYear() && fromDate?.getFullYear()
-            const latestYear = toYear && toMonth?.getFullYear() && toDate?.getFullYear()
+            const earliestYear = fromYear ?? fromMonth?.getFullYear() ?? fromDate?.getFullYear()
+            const latestYear = toYear ?? toMonth?.getFullYear() ?? toDate?.getFullYear()
 
             let selectItems: { label: string, value: string }[] = []
 
@@ -113,7 +113,15 @@ function Calendar({
                 label: (earliestYear + i).toString(),
                 value: (earliestYear + i).toString()
               }))
+            } else {
+              // Añadir algunos valores predeterminados si no se obtienen correctamente los años
+              selectItems = [
+                { label: "2023", value: "2023" },
+                { label: "2024", value: "2024" },
+                { label: "2025", value: "2025" },
+              ]
             }
+
             return (
               <Select
                 onValueChange={(newValue) => {
