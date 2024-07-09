@@ -20,6 +20,7 @@ import { formatISO9075 } from "date-fns"
 import { editarCurso } from "@/server/actions/curso"
 import { type CursoForm } from "@/components/cursos/AddForm"
 import { Switch } from "@/components/ui/switch"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 
 
@@ -99,99 +100,107 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
 
     return (
 
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-                <FormField
-                    control={form.control}
-                    name="dias_semana"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Dias Semana</FormLabel>
-                            <FormControl>
-                                <MultiSelectFormField
-                                    options={diasSemana}
-                                    defaultValue={field.value}
-                                    onValueChange={field.onChange}
-                                    placeholder="Select"
-                                    variant="inverted"
-                                    animation={0}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+        <Card className="p-5 min-h-[483px]">
+            <CardHeader>
+                <CardTitle className="text-4xl">Informacion del Curso</CardTitle>
+            </CardHeader>
 
-                <div className="flex gap-4">
-                    <FormField
-                        control={form.control}
-                        name="nombre"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Nombre</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Nombre" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="activo"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col items-center justify-center">
-                                <FormLabel>Activo</FormLabel>
-                                <FormControl>
-                                    <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
 
-                </div>
+                        <div className="flex gap-4">
+                            <FormField
+                                control={form.control}
+                                name="nombre"
+                                render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Nombre</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Nombre" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="activo"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col items-center justify-center">
+                                        <FormLabel>Activo</FormLabel>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
 
-                <div className="flex justify-between gap-4">
-                    <FormField
-                        control={form.control}
-                        name="hora_inicio"
-                        render={({ field }) => (
-                            <FormItem className="flex-1">
-                                <FormLabel>Inicio</FormLabel>
-                                <FormControl>
-                                    <Input className="w-full" placeholder="Inicio" type="time" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="hora_fin"
-                        render={({ field }) => (
-                            <FormItem className="flex-1">
-                                <FormLabel>Fin</FormLabel>
-                                <FormControl>
-                                    <Input className="w-full" placeholder="Fin" type="time" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="dias_semana"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Dias Semana</FormLabel>
+                                    <FormControl>
+                                        <MultiSelectFormField
 
-                </div>
+                                            options={diasSemana}
+                                            defaultValue={field.value}
+                                            onValueChange={field.onChange}
+                                            placeholder="Select"
+                                            variant="inverted"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                <div className="flex justify-center">
-                    <Button variant="outline" type="submit">
-                        Guardar
-                    </Button>
-                </div>
-            </form>
-        </Form>
 
+                        <div className="flex justify-between gap-4">
+                            <FormField
+                                control={form.control}
+                                name="hora_inicio"
+                                render={({ field }) => (
+                                    <FormItem className="flex-1">
+                                        <FormLabel>Inicio</FormLabel>
+                                        <FormControl>
+                                            <Input className="w-full" placeholder="Inicio" type="time" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="hora_fin"
+                                render={({ field }) => (
+                                    <FormItem className="flex-1">
+                                        <FormLabel>Fin</FormLabel>
+                                        <FormControl>
+                                            <Input className="w-full" placeholder="Fin" type="time" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                        </div>
+
+                        <div className="flex justify-center ">
+                            <Button className="mt-10" variant="default" type="submit">
+                                Guardar
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
 
     )
 }
