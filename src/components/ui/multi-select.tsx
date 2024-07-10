@@ -1,23 +1,23 @@
 /* eslint-disable */
-import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 import {
   CheckIcon,
   XCircle,
   ChevronDown,
   XIcon,
   WandSparkles,
-} from "lucide-react";
+} from "lucide-react"
 
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils"
+import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
 import {
   Command,
   CommandEmpty,
@@ -26,7 +26,7 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/command";
+} from "@/components/ui/command"
 
 const multiSelectVariants = cva(
   "m-1 transition ease-in-out delay-150  duration-300",
@@ -46,23 +46,23 @@ const multiSelectVariants = cva(
       variant: "default",
     },
   }
-);
+)
 
 interface MultiSelectFormFieldProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
   VariantProps<typeof multiSelectVariants> {
-  asChild?: boolean;
+  asChild?: boolean
   options: {
-    label: string;
-    value: string;
-    icon?: React.ComponentType<{ className?: string }>;
-  }[];
-  defaultValue?: string[];
-  disabled?: boolean;
-  placeholder: string;
-  className?: string;
-  animation?: number;
-  onValueChange: (value: string[]) => void;
+    label: string
+    value: string
+    icon?: React.ComponentType<{ className?: string }>
+  }[]
+  defaultValue?: string[]
+  disabled?: boolean
+  placeholder: string
+  className?: string
+  animation?: number
+  onValueChange: (value: string[]) => void
 }
 
 const MultiSelectFormField = React.forwardRef<
@@ -86,39 +86,39 @@ const MultiSelectFormField = React.forwardRef<
   ) => {
     const [selectedValues, setSelectedValues] = React.useState<string[]>(
       defaultValue || []
-    );
-    const selectedValuesSet = React.useRef(new Set(selectedValues));
-    const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-    const [isAnimating, setIsAnimating] = React.useState(animation > 0);
+    )
+    const selectedValuesSet = React.useRef(new Set(selectedValues))
+    const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
+    const [isAnimating, setIsAnimating] = React.useState(animation > 0)
 
     React.useEffect(() => {
-      setSelectedValues(defaultValue || []);
-      selectedValuesSet.current = new Set(defaultValue);
-    }, [defaultValue]);
+      setSelectedValues(defaultValue || [])
+      selectedValuesSet.current = new Set(defaultValue)
+    }, [defaultValue])
 
     const handleInputKeyDown = (event: any) => {
       if (event.key === "Enter") {
-        setIsPopoverOpen(true);
+        setIsPopoverOpen(true)
       } else if (event.key === "Backspace" && !event.target.value) {
-        selectedValues.pop();
-        setSelectedValues([...selectedValues]);
+        selectedValues.pop()
+        setSelectedValues([...selectedValues])
         selectedValuesSet.current.delete(
           selectedValues[selectedValues.length - 1] || ''
-        );
-        onValueChange([...selectedValues]);
+        )
+        onValueChange([...selectedValues])
       }
-    };
+    }
 
     const toggleOption = (value: string) => {
       if (selectedValuesSet.current.has(value)) {
-        selectedValuesSet.current.delete(value);
-        setSelectedValues(selectedValues.filter((v) => v !== value));
+        selectedValuesSet.current.delete(value)
+        setSelectedValues(selectedValues.filter((v) => v !== value))
       } else {
-        selectedValuesSet.current.add(value);
-        setSelectedValues([...selectedValues, value]);
+        selectedValuesSet.current.add(value)
+        setSelectedValues([...selectedValues, value])
       }
-      onValueChange(Array.from(selectedValuesSet.current));
-    };
+      onValueChange(Array.from(selectedValuesSet.current))
+    }
 
     return (
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
@@ -133,8 +133,8 @@ const MultiSelectFormField = React.forwardRef<
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.map((value) => {
-                    const option = options.find((o) => o.value === value);
-                    const IconComponent = option?.icon;
+                    const option = options.find((o) => o.value === value)
+                    const IconComponent = option?.icon
                     return (
                       <Badge
                         key={value}
@@ -153,22 +153,22 @@ const MultiSelectFormField = React.forwardRef<
                         <XCircle
                           className="ml-2 h-4 w-4 cursor-pointer"
                           onClick={(event) => {
-                            event.stopPropagation();
-                            toggleOption(value);
+                            event.stopPropagation()
+                            toggleOption(value)
                           }}
                         />
                       </Badge>
-                    );
+                    )
                   })}
                 </div>
                 <div className="flex items-center justify-between">
                   <XIcon
                     className="h-4 mx-2 cursor-pointer text-muted-foreground"
                     onClick={(event) => {
-                      setSelectedValues([]);
-                      selectedValuesSet.current.clear();
-                      onValueChange([]);
-                      event.stopPropagation();
+                      setSelectedValues([])
+                      selectedValuesSet.current.clear()
+                      onValueChange([])
+                      event.stopPropagation()
                     }}
                   />
                   <Separator
@@ -195,16 +195,16 @@ const MultiSelectFormField = React.forwardRef<
         >
           <Command>
             <CommandInput
-              placeholder="Search..."
+              placeholder="Buscar..."
               onKeyDown={handleInputKeyDown}
             />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>No se encontraron resultados.</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => {
                   const isSelected = selectedValuesSet.current.has(
                     option.value
-                  );
+                  )
                   return (
                     <CommandItem
                       key={option.value}
@@ -230,7 +230,7 @@ const MultiSelectFormField = React.forwardRef<
                       )}
                       <span>{option.label}</span>
                     </CommandItem>
-                  );
+                  )
                 })}
               </CommandGroup>
               <CommandSeparator />
@@ -240,9 +240,9 @@ const MultiSelectFormField = React.forwardRef<
                     <>
                       <CommandItem
                         onSelect={() => {
-                          setSelectedValues([]);
-                          selectedValuesSet.current.clear();
-                          onValueChange([]);
+                          setSelectedValues([])
+                          selectedValuesSet.current.clear()
+                          onValueChange([])
                         }}
                         style={{
                           pointerEvents: "auto",
@@ -250,7 +250,7 @@ const MultiSelectFormField = React.forwardRef<
                         }}
                         className="flex-1 justify-center cursor-pointer"
                       >
-                        Clear
+                        Borrar
                       </CommandItem>
                       <Separator
                         orientation="vertical"
@@ -267,7 +267,7 @@ const MultiSelectFormField = React.forwardRef<
                     }}
                     className="flex-1 justify-center cursor-pointer"
                   >
-                    Close
+                    Cerrar
                   </CommandItem>
                 </div>
               </CommandGroup>
@@ -284,10 +284,10 @@ const MultiSelectFormField = React.forwardRef<
           />
         )}
       </Popover>
-    );
+    )
   }
-);
+)
 
-MultiSelectFormField.displayName = "MultiSelectFormField";
+MultiSelectFormField.displayName = "MultiSelectFormField"
 
-export default MultiSelectFormField;
+export default MultiSelectFormField
