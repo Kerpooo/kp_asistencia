@@ -17,7 +17,7 @@ import { formSchema } from "@/schemas/asistenciaSchema"
 import { useEffect, useState } from "react"
 import { tomaAsistencia } from "@/server/actions/asistencia"
 import { listarEstudiantesCurso } from "@/server/actions/curso"
-import { ListaAlumnosCurso } from "@/types/prisma_types"
+import { type ListaAlumnosCurso } from "@/types/prisma_types"
 
 
 export type AsistenciaForm = z.infer<typeof formSchema>
@@ -36,7 +36,7 @@ export const FormAsistencia = ({ fecha, cursoId }: FormAsistenciaProps) => {
         },
     })
 
-    const [kids, setKids] = useState<ListaAlumnosCurso>([])
+    const [kids, setKids] = useState<ListaAlumnosCurso | undefined>([])
 
     useEffect(() => {
         const obtenerKids = async () => {
