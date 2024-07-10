@@ -96,3 +96,43 @@ export async function listarKids() {
     }
 
 }
+export async function obtenerEstudiantesCurso(cursoId: string) {
+    try {
+        const estudiantesCurso = await prisma.kid.findMany({
+
+            where: {
+                Curso: {
+                    some: {
+                        id: cursoId
+                    }
+                }
+            }
+
+        })
+
+        return estudiantesCurso
+
+    } catch (error) {
+        throw error
+
+    }
+
+}
+
+
+export async function listarEstudiantes() {
+    try {
+        const estudiantes = prisma.kid.findMany({
+            select: {
+                id: true,
+                nombre: true,
+                apellido: true
+            }
+        })
+        return estudiantes
+
+    } catch (error) {
+        throw error
+    }
+
+}
