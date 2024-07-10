@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { formatISO9075 } from "date-fns"
-import { CursoCardType } from "@/types/prisma_types"
+import { type CursoCardType } from "@/types/prisma_types"
 import Link from "next/link"
 
 interface CardProps extends CursoCardType { }

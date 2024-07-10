@@ -23,9 +23,9 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { useState } from "react"
-import { Alumnos } from "@/types/prisma_types"
+import { type Alumnos } from "@/types/prisma_types"
 import { useEstudiantes, } from "@/hooks/estudiantes"
-import { AlumnosCurso } from "./CardEstudiantes"
+import { type AlumnosCurso } from "./CardEstudiantes"
 
 
 
@@ -57,16 +57,15 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
 
             <DialogContent className="gap-0 p-0 outline-none">
                 <DialogHeader className="px-4 pb-4 pt-5">
-                    <DialogTitle>New message</DialogTitle>
+                    <DialogTitle>Nuevo Estudiante</DialogTitle>
                     <DialogDescription>
-                        Invite a user to this thread. This will create a new group
-                        message.
+                        Inscriba un estudiante a este curso.
                     </DialogDescription>
                 </DialogHeader>
                 <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
-                    <CommandInput placeholder="Search user..." />
+                    <CommandInput placeholder="Buscar estudiante..." />
                     <CommandList>
-                        <CommandEmpty>No users found.</CommandEmpty>
+                        <CommandEmpty>No se encontraron estudiantes</CommandEmpty>
                         <CommandGroup className="p-2 max-h-[172px] overflow-y-auto">
 
                             {
@@ -126,7 +125,7 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
                         </div>
                     ) : (
                         <p className="text-sm text-muted-foreground">
-                            Select users to add to this thread.
+                            Seleccione Esudiantes para añadir a este curso.
                         </p>
                     )}
                     <Button

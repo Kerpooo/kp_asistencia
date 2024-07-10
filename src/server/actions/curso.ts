@@ -77,7 +77,11 @@ export async function listarCursos() {
     try {
         const cursos = await prisma.curso.findMany({
             include: {
-                Kid: true
+                _count: {
+                    select: {
+                        Kid: true
+                    }
+                }
             }
         })
         return cursos
@@ -87,6 +91,7 @@ export async function listarCursos() {
         throw error
     }
 }
+
 
 
 export async function listarEstudiantesCurso(cursoId: string) {
@@ -106,24 +111,6 @@ export async function listarEstudiantesCurso(cursoId: string) {
     }
     catch (error) {
         console.error("Error al obtener la lista de estudiantes:", error)
-        throw error
-    }
-}
-
-
-export async function obtenerCursoKids(id: string) {
-    try {
-        const cursoKids = await prisma.curso.findUnique({
-            where: { id },
-            include: {
-                Kid: { select: { id: true } }
-            }
-        })
-
-        return cursoKids
-
-    } catch (error) {
-        console.error("Error al obtener el curso con la lista de estudiantes:", error)
         throw error
     }
 }

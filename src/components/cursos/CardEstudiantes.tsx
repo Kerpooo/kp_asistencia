@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 
 
-import { ListaAlumnosCurso } from "@/types/prisma_types"
+import { type ListaAlumnosCurso } from "@/types/prisma_types"
 import { AddEstudiante } from "./AddEstudiante"
 
 export interface AlumnosCurso {
