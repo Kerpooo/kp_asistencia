@@ -114,3 +114,57 @@ export async function listarEstudiantesCurso(cursoId: string) {
         throw error
     }
 }
+
+
+
+export async function inscribirEstudiantesCurso(cursoId: string, data: Array<{ id: string }>) {
+    try {
+        const inscribirEstudiante = await prisma.curso.update({
+            where: { id: cursoId },
+            data: {
+                Kid: {
+                    connect: data
+                }
+            }
+        })
+
+        revalidatePath(`/cursos/${cursoId}`, "page")
+        return inscribirEstudiante
+
+
+
+    } catch (error) {
+
+        console.log("Error al inscribir los alumnos", error)
+        throw error
+
+    }
+
+}
+
+export async function quitarEstudianteCurso(estudianteId: string, cursoId: string) {
+    try {
+        const quitarEstudiante = await prisma.curso.update({
+            where: { id: cursoId },
+            data: {
+                Kid: {
+                    disconnect: {
+                        id: estudianteId
+                    }
+                }
+
+            }
+
+        })
+
+        revalidatePath(`/cursos/${cursoId}`, "page")
+        return quitarEstudiante
+
+
+    } catch (error) {
+
+        console.log("Error al eliminar alumnos del curso", error)
+        throw error
+
+    }
+}

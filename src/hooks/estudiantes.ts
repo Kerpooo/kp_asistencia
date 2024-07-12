@@ -29,6 +29,3 @@ export function useEstudiantes() {
 
     return { estudiantes, loading, error }
 }
-
-
-

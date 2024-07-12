@@ -100,14 +100,13 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
 
     return (
 
-        <Card className="p-5 min-h-[483px]">
+        <Card>
             <CardHeader>
-                <CardTitle className="text-4xl">Informacion del Curso</CardTitle>
+                <CardTitle className="text-4xl text-center">Curso</CardTitle>
             </CardHeader>
-
-            <CardContent>
+            <CardContent className="max-h-[390px] min-h-[390px]">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 md:space-y-4">
 
                         <div className="flex gap-4">
                             <FormField
@@ -193,7 +192,7 @@ export const EditForm = ({ id, nombre, hora_inicio, hora_fin, dia_semana, activo
                         </div>
 
                         <div className="flex justify-center ">
-                            <Button className="mt-10" variant="default" type="submit">
+                            <Button className="md:mt-10" variant="default" type="submit">
                                 Guardar
                             </Button>
                         </div>

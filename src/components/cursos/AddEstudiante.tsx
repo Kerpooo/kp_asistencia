@@ -26,22 +26,52 @@ import { useState } from "react"
 import { type Alumnos } from "@/types/prisma_types"
 import { useEstudiantes, } from "@/hooks/estudiantes"
 import { type AlumnosCurso } from "./CardEstudiantes"
+import { useParams } from "next/navigation"
+import { inscribirEstudiantesCurso } from "@/server/actions/curso"
+import { toast } from "@/components/ui/use-toast"
 
+
+
+const inscribirEstudiantes = async (cursoId: string | string[] | undefined, estudiantes: Alumnos[], onSuccess: Function) => {
+
+    const estudiantesToSend = estudiantes.map((alumno) => ({ id: alumno.id }))
+
+    if (typeof cursoId === 'string') {
+        try {
+            await inscribirEstudiantesCurso(cursoId, estudiantesToSend)
+            toast({
+                title: "Se agreagaron los alumnos al curso",
+                variant: "success"
+            })
+            onSuccess()
+        } catch (error) {
+            toast({
+                title: "Error al guardar los datos",
+                variant: "destructive"
+            })
+        }
+    }
+}
 
 
 export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
+
+    const { id: cursoId } = useParams()
 
     const { estudiantes } = useEstudiantes()
     const estudiantesNoInscritos = estudiantes.filter((estudiante) =>
         !listaInscritos.some(inscrito => inscrito.id === estudiante.id)
     )
     const [estudiantesSeleccionados, setEstudiantesSeleccionado] = useState<Alumnos[]>([])
+    const [dialogOpen, setDialogOpen] = useState(false)
 
-
+    const handleSuccess = () => {
+        setDialogOpen(false)
+    }
 
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
 
                 <Button
@@ -69,8 +99,6 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
                         <CommandGroup className="p-2 max-h-[172px] overflow-y-auto">
 
                             {
-
-
 
                                 estudiantesNoInscritos.map((estudiante) => (
                                     <CommandItem
@@ -130,12 +158,13 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
                     )}
                     <Button
                         disabled={estudiantesSeleccionados.length < 1}
+                        onClick={() => inscribirEstudiantes(cursoId, estudiantesSeleccionados, handleSuccess)}
                     >
                         Continue
                     </Button>
                 </DialogFooter>
             </DialogContent>
-        </Dialog>
+        </Dialog >
 
     )
 }

@@ -12,12 +12,15 @@ import {
 
 import { type ListaAlumnosCurso } from "@/types/prisma_types"
 import { AddEstudiante } from "./AddEstudiante"
+import { DeleteEstudianteCurso } from "./DeleteEstudianteCurso"
 
 export interface AlumnosCurso {
     listaInscritos: ListaAlumnosCurso
+    cursoId?: string
 }
 
-export function CardInscritos({ listaInscritos }: AlumnosCurso) {
+
+export function CardInscritos({ listaInscritos, cursoId }: AlumnosCurso) {
 
     return (
         <>
@@ -30,26 +33,30 @@ export function CardInscritos({ listaInscritos }: AlumnosCurso) {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4 max-h-[390px] min-h-[390px] overflow-y-auto">
                     {
-                        listaInscritos.map((estudiante) => {
-                            return (
-                                <div className="flex items-center gap-4 min-w-52" key={estudiante.id}>
-                                    <Avatar className="hidden h-9 w-9 sm:flex">
-                                        <AvatarFallback>{`${estudiante.nombre[0]} ${estudiante.apellido[0]}`}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <p className="text-sm font-medium leading-none">{`${estudiante.nombre} ${estudiante.apellido}`} </p>
+                        listaInscritos.map(({ id, nombre, apellido }) => {
+                            if (cursoId) {
+                                return (
+                                    <div className="flex items-center justify-between" key={id}>
+                                        <div className="flex items-center gap-4 min-w-52">
+                                            <Avatar className="hidden h-9 w-9 sm:flex">
+                                                <AvatarFallback>{`${nombre[0]} ${apellido[0]}`}</AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <p className="text-sm font-medium leading-none">{`${nombre} ${apellido}`}</p>
+                                            </div>
+                                        </div>
+
+                                        <DeleteEstudianteCurso
+                                            cursoId={cursoId}
+                                            estudianteId={id}
+                                        />
                                     </div>
-                                </div>
-                            )
+                                )
+                            }
                         })
                     }
-
                 </CardContent>
             </Card>
         </>
     )
 }
-
-
-
-
