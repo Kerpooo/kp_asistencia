@@ -32,7 +32,7 @@ import { toast } from "@/components/ui/use-toast"
 
 
 
-const inscribirEstudiantes = async (cursoId: string | string[] | undefined, estudiantes: Alumnos[], onSuccess: Function) => {
+const inscribirEstudiantes = async (cursoId: string | string[] | undefined, estudiantes: Alumnos[], onSuccess: () => void) => {
 
     const estudiantesToSend = estudiantes.map((alumno) => ({ id: alumno.id }))
 
