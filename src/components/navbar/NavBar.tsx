@@ -1,4 +1,4 @@
-import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
+import { SheetTrigger, SheetContent, Sheet, SheetTitle, SheetHeader, SheetDescription } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { navItems } from "./SideNavBar"
@@ -32,6 +32,12 @@ export const NavBar = () => {
                         <span className="sr-only">Toggle Menu</span>
                     </Button>
                 </SheetTrigger>
+                <SheetHeader className="hidden">
+                    <SheetTitle>Mobile Navbar</SheetTitle>
+                    <SheetDescription>
+                        Navbar de la vista en pantallas pequeñas
+                    </SheetDescription>
+                </SheetHeader>
                 <SheetContent className="sm:max-w-xs" side="left">
                     <nav className="grid gap-6 text-lg font-medium">
                         <Link

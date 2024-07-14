@@ -29,6 +29,18 @@ import { type AlumnosCurso } from "./CardEstudiantes"
 import { useParams } from "next/navigation"
 import { inscribirEstudiantesCurso } from "@/server/actions/curso"
 import { toast } from "@/components/ui/use-toast"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
+
 
 
 
@@ -59,6 +71,7 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
     const { id: cursoId } = useParams()
 
     const { estudiantes } = useEstudiantes()
+    const isDesktop = useMediaQuery("(min-width: 768px)")
     const estudiantesNoInscritos = estudiantes.filter((estudiante) =>
         !listaInscritos.some(inscrito => inscrito.id === estudiante.id)
     )
@@ -70,10 +83,110 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
     }
 
 
-    return (
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
 
+    if (isDesktop) {
+        return (
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+
+                    <Button
+                        size="icon"
+                        variant="outline"
+                        className="ml-auto rounded-full"
+                    >
+                        <PlusIcon className="h-4 w-4" />
+                        <span className="sr-only">Nuevo Alumno</span>
+                    </Button>
+
+                </DialogTrigger>
+
+                <DialogContent className="gap-0 p-0 outline-none">
+                    <DialogHeader className="px-4 pb-4 pt-5">
+                        <DialogTitle>Nuevo Estudiante</DialogTitle>
+                        <DialogDescription>
+                            Inscriba un estudiante a este curso.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
+                        <CommandInput placeholder="Buscar estudiante..." />
+                        <CommandList>
+                            <CommandEmpty>No se encontraron estudiantes</CommandEmpty>
+                            <CommandGroup className="p-2 max-h-[172px] overflow-y-auto">
+
+                                {
+
+                                    estudiantesNoInscritos.map((estudiante) => (
+                                        <CommandItem
+                                            key={estudiante.id}
+                                            className="flex items-center px-2"
+                                            onSelect={() => {
+                                                if (estudiantesSeleccionados.includes(estudiante)) {
+                                                    return setEstudiantesSeleccionado(
+                                                        estudiantesSeleccionados.filter(
+                                                            (selectedUser) => selectedUser !== estudiante
+                                                        )
+                                                    )
+                                                }
+
+                                                return setEstudiantesSeleccionado(
+                                                    [...estudiantesNoInscritos].filter((u) =>
+                                                        [...estudiantesSeleccionados, estudiante].includes(u)
+                                                    )
+                                                )
+                                            }}
+                                        >
+                                            <Avatar>
+                                                <AvatarFallback>{estudiante.nombre[0]}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="ml-2">
+                                                <p className="text-sm font-medium leading-none">
+                                                    {estudiante.nombre}
+                                                </p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {estudiante.apellido}
+                                                </p>
+                                            </div>
+                                            {estudiantesSeleccionados.includes(estudiante) ? (
+                                                <CheckIcon className="ml-auto flex h-5 w-5 text-primary" />
+                                            ) : null}
+                                        </CommandItem>
+                                    ))}
+                            </CommandGroup>
+                        </CommandList>
+                    </Command>
+                    <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
+                        {estudiantesSeleccionados.length > 0 ? (
+                            <div className="flex -space-x-2 overflow-hidden">
+                                {estudiantesSeleccionados.map((estudiante) => (
+                                    <Avatar
+                                        key={estudiante.id}
+                                        className="inline-block border-2 border-background"
+                                    >
+                                        <AvatarFallback>{estudiante.nombre[0]}</AvatarFallback>
+                                    </Avatar>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">
+                                Seleccione Esudiantes para añadir a este curso.
+                            </p>
+                        )}
+                        <Button
+                            disabled={estudiantesSeleccionados.length < 1}
+                            onClick={() => inscribirEstudiantes(cursoId, estudiantesSeleccionados, handleSuccess)}
+                        >
+                            Continuar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog >
+
+        )
+    }
+
+    return (
+        <Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DrawerTrigger asChild>
                 <Button
                     size="icon"
                     variant="outline"
@@ -82,16 +195,12 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
                     <PlusIcon className="h-4 w-4" />
                     <span className="sr-only">Nuevo Alumno</span>
                 </Button>
-
-            </DialogTrigger>
-
-            <DialogContent className="gap-0 p-0 outline-none">
-                <DialogHeader className="px-4 pb-4 pt-5">
-                    <DialogTitle>Nuevo Estudiante</DialogTitle>
-                    <DialogDescription>
-                        Inscriba un estudiante a este curso.
-                    </DialogDescription>
-                </DialogHeader>
+            </DrawerTrigger>
+            <DrawerContent>
+                <DrawerHeader>
+                    <DrawerTitle>Nuevo Estudiante</DrawerTitle>
+                    <DrawerDescription> Inscriba un estudiante a este curso.</DrawerDescription>
+                </DrawerHeader>
                 <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
                     <CommandInput placeholder="Buscar estudiante..." />
                     <CommandList>
@@ -139,7 +248,7 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
                         </CommandGroup>
                     </CommandList>
                 </Command>
-                <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
+                <DrawerFooter>
                     {estudiantesSeleccionados.length > 0 ? (
                         <div className="flex -space-x-2 overflow-hidden">
                             {estudiantesSeleccionados.map((estudiante) => (
@@ -160,11 +269,17 @@ export const AddEstudiante = ({ listaInscritos }: AlumnosCurso) => {
                         disabled={estudiantesSeleccionados.length < 1}
                         onClick={() => inscribirEstudiantes(cursoId, estudiantesSeleccionados, handleSuccess)}
                     >
-                        Continue
+                        Continuar
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog >
-
+                </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
     )
+
 }
+
+
+
+
+
+
